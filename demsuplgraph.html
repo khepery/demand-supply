@@ -23,10 +23,11 @@
     background:radial-gradient(circle at top,#1e293b 0,var(--bg) 55%);
     color:var(--text-main);
     display:flex;justify-content:center;
+    font-size:18px;
   }
-  .app{max-width:1100px;width:100%;}
-  h1{text-align:center;margin:0 0 6px;font-size:24px;}
-  .hint{text-align:center;font-size:12px;color:var(--text-soft);margin-bottom:10px;}
+  .app{max-width:1400px;width:100%;}
+  h1{text-align:center;margin:0 0 12px;font-size:36px;font-weight:700;}
+  .hint{text-align:center;font-size:18px;color:var(--text-soft);margin-bottom:16px;line-height:1.6;}
   .top-row{display:flex;flex-wrap:wrap;gap:16px;}
 
   #graph-wrapper{
@@ -56,14 +57,15 @@
     box-shadow:0 10px 26px rgba(0,0,0,0.55);
   }
   .emoji-face{
-    font-size:38px;
+    font-size:70px;
     line-height:1.1;
   }
   .emoji-text{
-    font-size:13px;
+    font-size:20px;
     color:var(--text-soft);
-    margin-top:4px;
-    max-width:420px;
+    margin-top:8px;
+    max-width:600px;
+    line-height:1.5;
   }
   .pop{animation:pop 0.45s ease-out;}
   @keyframes pop{
@@ -73,12 +75,13 @@
   }
   .badge-row{
     display:flex;justify-content:space-between;
-    font-size:13px;margin-top:8px;color:var(--text-soft);
+    font-size:18px;margin-top:12px;color:var(--text-soft);
   }
   .badge{
-    padding:3px 12px;border-radius:999px;
+    padding:8px 18px;border-radius:999px;
     background:rgba(15,23,42,0.9);
     border:1px solid rgba(148,163,184,0.3);
+    font-weight:500;
   }
 
   .controls-card{
@@ -89,47 +92,148 @@
     box-shadow:0 14px 30px rgba(0,0,0,0.6);
     border:1px solid rgba(148,163,184,0.35);
   }
-  h2{margin:0 0 4px;font-size:14px;color:var(--text-soft);font-weight:500;}
+  h2{margin:0 0 8px;font-size:20px;color:var(--text-soft);font-weight:600;}
 
   .market-row{
-    margin-bottom:8px;
-    font-size:12px;
+    margin-bottom:12px;
+    font-size:16px;
   }
   .market-row label{
     display:block;
-    margin-bottom:2px;
+    margin-bottom:4px;
+    font-weight:500;
   }
   #marketSelect{
     width:100%;
-    padding:4px 6px;
+    padding:12px 14px;
     border-radius:8px;
     border:1px solid rgba(148,163,184,0.6);
     background:#020617;
     color:var(--text-main);
-    font-size:12px;
+    font-size:18px;
+    min-height:60px;
+    cursor:pointer;
   }
   .market-desc{
-    font-size:11px;
+    font-size:16px;
     color:var(--text-soft);
-    margin-top:3px;
+    margin-top:8px;
+    line-height:1.5;
   }
 
-  .group-label{font-size:13px;font-weight:600;margin:6px 0 2px;}
-  .control-row{display:flex;flex-direction:column;margin-bottom:6px;font-size:12px;}
-  .control-row span{display:flex;justify-content:space-between;gap:4px;}
-  input[type="range"]{width:100%;accent-color:var(--accent3);}
-  .mini{color:var(--text-soft);font-size:11px;}
-  .stats{margin-top:8px;font-size:13px;line-height:1.4;}
-  .stats-line{margin-top:3px;}
-  .legend{margin-top:8px;font-size:11px;color:var(--text-soft);}
-  .legend span{display:inline-flex;align-items:center;margin-right:8px;}
-  .dot{width:10px;height:10px;border-radius:999px;display:inline-block;margin-right:3px;}
+  .group-label{font-size:18px;font-weight:600;margin:12px 0 6px;}
+  .control-row{display:flex;flex-direction:column;margin-bottom:10px;font-size:16px;}
+  .control-row span{display:flex;justify-content:space-between;gap:8px;}
+  input[type="range"]{
+    width:100%;
+    accent-color:var(--accent3);
+    height:40px;
+    cursor:pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    width:40px;
+    height:40px;
+    cursor:grab;
+  }
+  input[type="range"]:active::-webkit-slider-thumb{
+    cursor:grabbing;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:40px;
+    height:40px;
+    cursor:grab;
+  }
+  input[type="range"]:active::-moz-range-thumb{
+    cursor:grabbing;
+  }
+  .mini{color:var(--text-soft);font-size:15px;line-height:1.5;}
+  .stats{margin-top:12px;font-size:17px;line-height:1.6;}
+  .stats-line{margin-top:6px;}
+  .legend{margin-top:12px;font-size:15px;color:var(--text-soft);line-height:1.8;}
+  .legend span{display:inline-flex;align-items:center;margin-right:12px;}
+  .dot{width:14px;height:14px;border-radius:999px;display:inline-block;margin-right:6px;}
   .dot-demand{background:var(--accent1);}
   .dot-supply{background:var(--accent2);}
   .dot-eq{background:var(--accent4);}
   .dot-price{background:var(--accent3);}
   .dot-short{background:var(--accentShort);}
   .dot-surp{background:var(--accentSurp);}
+
+  .button-row{
+    display:flex;
+    gap:10px;
+    margin:16px 0;
+    flex-wrap:wrap;
+  }
+  .scenario-btn, .reset-btn{
+    flex:1;
+    min-width:120px;
+    padding:16px 20px;
+    font-size:16px;
+    font-weight:600;
+    border-radius:12px;
+    border:2px solid rgba(148,163,184,0.5);
+    cursor:pointer;
+    transition:all 0.2s ease;
+    min-height:60px;
+  }
+  .scenario-btn{
+    background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color:var(--text-main);
+  }
+  .scenario-btn:hover{
+    background:linear-gradient(135deg, #334155 0%, #1e293b 100%);
+    border-color:var(--accent3);
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(0,0,0,0.4);
+  }
+  .scenario-btn:active{
+    transform:translateY(0);
+  }
+  .reset-btn{
+    background:linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    color:#fff;
+    border-color:#dc2626;
+  }
+  .reset-btn:hover{
+    background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(220,38,38,0.4);
+  }
+  .reset-btn:active{
+    transform:translateY(0);
+  }
+
+  #coordDisplay{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:rgba(15,23,42,0.95);
+    padding:12px 16px;
+    border-radius:10px;
+    border:2px solid var(--accent3);
+    font-size:16px;
+    font-family:monospace;
+    color:var(--accent3);
+    font-weight:600;
+    pointer-events:none;
+    box-shadow:0 4px 12px rgba(0,0,0,0.6);
+    display:none;
+  }
+
+  .dragging-cursor{cursor:grabbing !important;}
+
+  .glow-eq{
+    animation:glowPulse 2s ease-in-out infinite;
+  }
+  @keyframes glowPulse{
+    0%, 100%{
+      filter:drop-shadow(0 0 8px rgba(250,204,21,0.8));
+    }
+    50%{
+      filter:drop-shadow(0 0 16px rgba(250,204,21,1));
+    }
+  }
 
   @media(max-width:820px){
     #graph-wrapper{order:1;}
@@ -139,15 +243,18 @@
 </head>
 <body>
 <div class="app">
-  <h1>📈 Demand & Supply Drag Playground</h1>
+  <h1>📈 Demand & Supply Drag Playground / 需求与供给互动图</h1>
   <div class="hint">
-    Drag near 💙 demand or 💚 supply to shift them. Drag the blue price line P* up or down.<br>
-    Watch how Qᵈ and Qˢ slide along their curves and try to land exactly on equilibrium.
+    <strong>Step 1:</strong> Drag near 💙 demand or 💚 supply curves to shift them. <br>
+    <strong>Step 2:</strong> Drag the blue price line P* up or down.<br>
+    <strong>Step 3:</strong> Watch how Qᵈ and Qˢ move along their curves. Try to reach equilibrium!<br>
+    <strong>步骤1:</strong> 拖动💙需求或💚供给曲线来移动它们。<strong>步骤2:</strong> 上下拖动蓝色价格线P*。<strong>步骤3:</strong> 观察Qᵈ和Qˢ如何沿曲线移动。试着达到均衡点！
   </div>
 
   <div class="top-row">
     <div id="graph-wrapper">
       <canvas id="graph"></canvas>
+      <div id="coordDisplay"></div>
 
       <div class="emoji-row">
         <div class="emoji-box" id="emojiBox">
@@ -159,66 +266,75 @@
       </div>
 
       <div class="badge-row">
-        <div class="badge">Y-axis: Price per unit 💰</div>
-        <div class="badge">X-axis: Quantity of goods 📦</div>
+        <div class="badge">Y-axis: Price per unit 💰 / 价格</div>
+        <div class="badge">X-axis: Quantity of goods 📦 / 数量</div>
       </div>
     </div>
 
     <div class="controls-card">
-      <h2>🎛️ Control the market</h2>
+      <h2>🎛️ Control the market / 控制市场</h2>
+
+      <div class="button-row">
+        <button class="scenario-btn" onclick="showEquilibrium()">⚖️ Show Equilibrium<br>显示均衡</button>
+        <button class="scenario-btn" onclick="showShortage()">📉 Show Shortage<br>显示短缺</button>
+        <button class="scenario-btn" onclick="showSurplus()">📈 Show Surplus<br>显示过剩</button>
+        <button class="reset-btn" onclick="resetToDefault()">🔄 Reset<br>重置</button>
+      </div>
 
       <div class="market-row">
-        <label for="marketSelect">🛒 Market example</label>
+        <label for="marketSelect">🛒 Market example / 市场示例</label>
         <select id="marketSelect">
-          <option value="water">Bottled water (daily necessity)</option>
-          <option value="sneakers">Luxury sneakers</option>
-          <option value="electricity">Home electricity</option>
-          <option value="skins">Online game skins</option>
+          <option value="bubbletea">Bubble Tea 奶茶</option>
+          <option value="smartphone">Smartphone 智能手机</option>
+          <option value="movieticket">Movie Ticket 电影票</option>
+          <option value="schoolsupplies">School Supplies 学习用品</option>
         </select>
         <div class="market-desc" id="marketDesc">
-          Basic good people buy often. Demand is steady, supply is quite flexible.
+          Popular drink in China. High demand, flexible supply.<br>
+          中国流行饮料。需求高，供应灵活。
         </div>
       </div>
 
-      <div class="group-label">💙 Demand curve P = a<sub>D</sub> − b<sub>D</sub>Q</div>
+      <div class="group-label">💙 Demand curve / 需求曲线 P = a<sub>D</sub> − b<sub>D</sub>Q</div>
       <div class="control-row">
-        <span><span>Intercept a<sub>D</sub> (height of demand)</span><span id="aDVal"></span></span>
+        <span><span>Intercept a<sub>D</sub> (max willingness to pay / 最高支付意愿)</span><span id="aDVal"></span></span>
         <input id="aD" type="range" min="30" max="100" step="1" value="80">
       </div>
       <div class="control-row">
-        <span><span>Slope b<sub>D</sub> (how fast Q falls)</span><span id="bDVal"></span></span>
+        <span><span>Slope b<sub>D</sub> (how fast Q falls / 需求下降速度)</span><span id="bDVal"></span></span>
         <input id="bD" type="range" min="15" max="90" step="5" value="40">
       </div>
 
-      <div class="group-label">💚 Supply curve P = a<sub>S</sub> + b<sub>S</sub>Q</div>
+      <div class="group-label">💚 Supply curve / 供给曲线 P = a<sub>S</sub> + b<sub>S</sub>Q</div>
       <div class="control-row">
-        <span><span>Intercept a<sub>S</sub> (starting cost level)</span><span id="aSVal"></span></span>
+        <span><span>Intercept a<sub>S</sub> (starting cost level / 起始成本)</span><span id="aSVal"></span></span>
         <input id="aS" type="range" min="0" max="60" step="1" value="20">
       </div>
       <div class="control-row">
-        <span><span>Slope b<sub>S</sub> (how fast P rises)</span><span id="bSVal"></span></span>
+        <span><span>Slope b<sub>S</sub> (how fast P rises / 价格上升速度)</span><span id="bSVal"></span></span>
         <input id="bS" type="range" min="10" max="80" step="5" value="30">
       </div>
 
-      <div class="group-label">📏 Price level</div>
+      <div class="group-label">📏 Price level / 价格水平</div>
       <div class="control-row">
-        <span><span>Price line P*</span><span id="pVal"></span></span>
+        <span><span>Price line P* / 价格线</span><span id="pVal"></span></span>
         <input id="priceLine" type="range" min="5" max="95" step="1" value="50">
       </div>
       <div class="mini">
-        Move P* with this slider or drag the blue line on the graph.<br>
-        At that P*, the blue dot is Qᵈ on the demand curve and the green dot is Qˢ on the supply curve.
+        💡 <strong>Tip:</strong> Move P* with this slider or drag the blue line on the graph.<br>
+        At that P*, the blue dot is Qᵈ on demand and green dot is Qˢ on supply.<br>
+        提示：用滑块或拖动图上的蓝线来移动P*。在P*处，蓝点是需求量Qᵈ，绿点是供给量Qˢ。
       </div>
 
       <div class="stats" id="statsBox"></div>
 
       <div class="legend">
-        <span><span class="dot dot-demand"></span>Demand (D)</span>
-        <span><span class="dot dot-supply"></span>Supply (S)</span>
-        <span><span class="dot dot-eq"></span>Equilibrium E(Qᵉ,Pᵉ)</span><br>
-        <span><span class="dot dot-price"></span>Price line P*</span>
-        <span><span class="dot dot-short"></span>Shortage area</span>
-        <span><span class="dot dot-surp"></span>Surplus area</span>
+        <span><span class="dot dot-demand"></span>Demand (D) / 需求</span>
+        <span><span class="dot dot-supply"></span>Supply (S) / 供给</span>
+        <span><span class="dot dot-eq"></span>Equilibrium E / 均衡点</span><br>
+        <span><span class="dot dot-price"></span>Price line P* / 价格线</span>
+        <span><span class="dot dot-short"></span>Shortage / 短缺</span>
+        <span><span class="dot dot-surp"></span>Surplus / 过剩</span>
       </div>
     </div>
   </div>
@@ -228,7 +344,8 @@
 (function(){
   const canvas = document.getElementById("graph");
   const ctx = canvas.getContext("2d");
-  const PAD_LEFT = 70, PAD_RIGHT = 40, PAD_TOP = 40, PAD_BOTTOM = 60;
+  const coordDisplay = document.getElementById("coordDisplay");
+  const PAD_LEFT = 80, PAD_RIGHT = 50, PAD_TOP = 50, PAD_BOTTOM = 80;
   const maxQ = 100, maxP = 100;
 
   const aD = document.getElementById("aD");
@@ -249,48 +366,49 @@
   const marketDescEl = document.getElementById("marketDesc");
 
   const markets = {
-    water: {
-      label: "Bottled water (daily necessity)",
-      aD: 90,  // high max willingness to pay
-      bD: 50,  // moderate slope
-      aS: 10,  // low base cost
-      bS: 25,  // moderate supply slope
-      price: 37,
-      desc: "People buy it very often. Demand is steady; firms can adjust supply fairly easily."
+    bubbletea: {
+      label: "Bubble Tea 奶茶",
+      aD: 95,
+      bD: 55,
+      aS: 15,
+      bS: 30,
+      price: 42,
+      desc: "Popular drink in China. High demand, flexible supply. 中国流行饮料。需求高，供应灵活。"
     },
-    sneakers: {
-      label: "Luxury sneakers",
-      aD: 110, // strong brand desire at high price
-      bD: 70,  // demand drops faster when price rises
-      aS: 30,  // higher base cost
-      bS: 25,  // moderate supply slope
-      price: 51,
-      desc: "Fashion item. When price rises too much, many buyers step back. Supply is flexible but not free."
+    smartphone: {
+      label: "Smartphone 智能手机",
+      aD: 120,
+      bD: 75,
+      aS: 35,
+      bS: 30,
+      price: 58,
+      desc: "High-tech product. Strong brand loyalty, expensive to produce. 高科技产品。品牌忠诚度高，生产成本高。"
     },
-    electricity: {
-      label: "Home electricity",
-      aD: 100, // people depend on it
-      bD: 25,  // more inelastic demand
-      aS: 15,  // some fixed costs
-      bS: 55,  // steeper supply slope
-      price: 73,
-      desc: "Basic necessity. Demand is less sensitive to price in the short run, supply costs rise faster at higher output."
+    movieticket: {
+      label: "Movie Ticket 电影票",
+      aD: 85,
+      bD: 45,
+      aS: 10,
+      bS: 35,
+      price: 38,
+      desc: "Entertainment good. Demand varies by film popularity. 娱乐产品。需求随电影热度变化。"
     },
-    skins: {
-      label: "Online game skins",
-      aD: 70,
-      bD: 55,  // quite price sensitive
-      aS: 0,   // almost zero marginal cost
-      bS: 15,  // very flat, elastic supply
-      price: 15,
-      desc: "Digital good. Very cheap to supply extra units; demand depends strongly on how high the price is."
+    schoolsupplies: {
+      label: "School Supplies 学习用品",
+      aD: 75,
+      bD: 40,
+      aS: 8,
+      bS: 25,
+      price: 28,
+      desc: "Student necessity. Steady demand, especially before school year. 学生必需品。需求稳定，特别是开学前。"
     }
   };
 
   let currAD=80, currBD=1, currAS=20, currBS=1;
   let dragTarget=null;
   let dragStart=null;
-  let currentMarketLabel = "Custom market";
+  let currentMarketLabel = "Custom market / 自定义市场";
+  let showGrid = true;
 
   function resizeCanvas(){
     const wrapper = document.getElementById("graph-wrapper");
@@ -317,44 +435,66 @@
 
   function drawAxes(){
     ctx.strokeStyle = "#64748b";
-    ctx.lineWidth = 1.6;
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(PAD_LEFT, PAD_TOP);
     ctx.lineTo(PAD_LEFT, canvas.height - PAD_BOTTOM);
     ctx.lineTo(canvas.width - PAD_RIGHT, canvas.height - PAD_BOTTOM);
     ctx.stroke();
 
+    // Draw gridlines
+    if(showGrid){
+      ctx.strokeStyle = "rgba(100,116,139,0.15)";
+      ctx.lineWidth = 1;
+      for(let p=10;p<=100;p+=10){
+        const y = pToY(p);
+        ctx.beginPath();
+        ctx.moveTo(PAD_LEFT, y);
+        ctx.lineTo(canvas.width - PAD_RIGHT, y);
+        ctx.stroke();
+      }
+      for(let q=10;q<=100;q+=10){
+        const x = qToX(q);
+        ctx.beginPath();
+        ctx.moveTo(x, PAD_TOP);
+        ctx.lineTo(x, canvas.height - PAD_BOTTOM);
+        ctx.stroke();
+      }
+    }
+
     ctx.fillStyle = "#e5e7eb";
-    ctx.font = "17px system-ui";
-    ctx.fillText("Price 💰", 14, PAD_TOP - 10);
-    ctx.fillText("Quantity 📦", canvas.width - PAD_RIGHT - 100, canvas.height - 12);
+    ctx.font = "bold 22px system-ui";
+    ctx.fillText("Price 💰 / 价格", 10, PAD_TOP - 18);
+    ctx.fillText("Quantity 📦 / 数量", canvas.width - PAD_RIGHT - 200, canvas.height - 14);
 
     ctx.fillStyle = "#9ca3af";
-    ctx.font = "14px system-ui";
+    ctx.font = "16px system-ui";
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 2;
     for(let p=20;p<=100;p+=20){
       const y = pToY(p);
       ctx.beginPath();
-      ctx.moveTo(PAD_LEFT-6, y);
-      ctx.lineTo(PAD_LEFT+6, y);
+      ctx.moveTo(PAD_LEFT-8, y);
+      ctx.lineTo(PAD_LEFT+8, y);
       ctx.stroke();
-      ctx.fillText(p.toString(), 20, y+4);
+      ctx.fillText(p.toString(), 28, y+6);
     }
     for(let q=20;q<=100;q+=20){
       const x = qToX(q);
       ctx.beginPath();
-      ctx.moveTo(x, canvas.height - PAD_BOTTOM - 6);
-      ctx.lineTo(x, canvas.height - PAD_BOTTOM + 6);
+      ctx.moveTo(x, canvas.height - PAD_BOTTOM - 8);
+      ctx.lineTo(x, canvas.height - PAD_BOTTOM + 8);
       ctx.stroke();
-      ctx.fillText(q.toString(), x-9, canvas.height - 32);
+      ctx.fillText(q.toString(), x-12, canvas.height - 44);
     }
   }
 
   function drawCurve(color, fnP){
     ctx.strokeStyle = color;
-    ctx.lineWidth = 2.6;
+    ctx.lineWidth = 4;
     ctx.beginPath();
     let started=false;
-    for(let q=0;q<=maxQ;q+=1){
+    for(let q=0;q<=maxQ;q+=0.5){
       const p = fnP(q);
       if(p<0||p>maxP) continue;
       const x=qToX(q), y=pToY(p);
@@ -364,14 +504,24 @@
     ctx.stroke();
   }
 
-  function drawDot(x,y,color,r=5){
+  function drawDot(x,y,color,r=8){
     ctx.fillStyle=color;
     ctx.beginPath();
     ctx.arc(x,y,r,0,Math.PI*2);
     ctx.fill();
     ctx.strokeStyle="rgba(15,23,42,0.9)";
-    ctx.lineWidth=1;
+    ctx.lineWidth=2;
     ctx.stroke();
+  }
+
+  function drawDotWithLabel(x,y,color,label,value,r=8){
+    drawDot(x,y,color,r);
+    ctx.fillStyle=color;
+    ctx.font="bold 16px system-ui";
+    ctx.strokeStyle="rgba(15,23,42,0.95)";
+    ctx.lineWidth=3;
+    ctx.strokeText(`${label} = ${value}`, x+14, y-10);
+    ctx.fillText(`${label} = ${value}`, x+14, y-10);
   }
 
   function labelCurve(letter, color, qPos){
@@ -383,25 +533,25 @@
     if(pVal<0||pVal>maxP) return;
     const x = qToX(qPos);
     const y = pToY(pVal);
-    ctx.font = "bold 21px system-ui";
-    ctx.lineWidth = 4;
+    ctx.font = "bold 28px system-ui";
+    ctx.lineWidth = 5;
     ctx.strokeStyle = "rgba(15,23,42,0.95)";
-    ctx.strokeText(letter, x+12, y-10);
+    ctx.strokeText(letter, x+14, y-12);
     ctx.fillStyle = color;
-    ctx.fillText(letter, x+12, y-10);
+    ctx.fillText(letter, x+14, y-12);
   }
 
   function setEmoji(mode){
-    let emoji="😶", text="Move the price line or a curve. I will explain what the market is doing.";
+    let emoji="😶", text="Move the price line or a curve. I will explain what the market is doing. / 移动价格线或曲线。我会解释市场在做什么。";
     if(mode==="eq"){
       emoji="🤝😎";
-      text="You are on equilibrium. At this price, quantity demanded equals quantity supplied.";
+      text="You are on equilibrium! At this price, quantity demanded equals quantity supplied. / 你达到了均衡点！在这个价格下，需求量等于供给量。";
     } else if(mode==="shortage"){
       emoji="🥺📉";
-      text="Shortage. At this price, buyers want more than firms are willing to sell.";
+      text="Shortage! At this price, buyers want more than sellers provide. Prices will tend to rise. / 短缺！在这个价格下，买家想要的比卖家提供的多。价格会趋于上涨。";
     } else if(mode==="surplus"){
       emoji="😵‍💫📈";
-      text="Surplus. At this price, firms want to sell more than buyers want to buy.";
+      text="Surplus! At this price, sellers offer more than buyers want. Prices will tend to fall. / 过剩！在这个价格下，卖家提供的比买家想要的多。价格会趋于下降。";
     }
     emojiBox.innerHTML=
       `<div class="emoji-face">${emoji}</div>`+
@@ -448,9 +598,9 @@
         eqVisible = true;
         const x = qToX(Qe), y = pToY(Pe);
 
-        ctx.setLineDash([4,4]);
+        ctx.setLineDash([6,6]);
         ctx.strokeStyle="#facc15";
-        ctx.lineWidth=1.4;
+        ctx.lineWidth=2;
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(x, canvas.height - PAD_BOTTOM);
@@ -459,36 +609,47 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        drawDot(x,y,"#facc15",7);
+        // Draw equilibrium point with glow
+        drawDot(x,y,"#facc15",10);
+        
         ctx.fillStyle="#facc15";
-        ctx.font="13px system-ui";
-        ctx.fillText("E",x+8,y-6);
+        ctx.font="bold 18px system-ui";
+        ctx.strokeStyle="rgba(15,23,42,0.95)";
+        ctx.lineWidth=3;
+        ctx.strokeText("E",x+12,y-8);
+        ctx.fillText("E",x+12,y-8);
 
         ctx.fillStyle="#facc15";
-        ctx.font="12px system-ui";
-        ctx.fillText("Qᵉ", x-12, canvas.height-PAD_BOTTOM+20);
-        ctx.fillText("Pᵉ", PAD_LEFT-26, y+4);
+        ctx.font="bold 16px system-ui";
+        ctx.strokeText(`Qᵉ = ${Qe.toFixed(1)}`, x-50, canvas.height-PAD_BOTTOM+28);
+        ctx.fillText(`Qᵉ = ${Qe.toFixed(1)}`, x-50, canvas.height-PAD_BOTTOM+28);
+        
+        ctx.strokeText(`Pᵉ = ${Pe.toFixed(1)}`, PAD_LEFT-70, y+6);
+        ctx.fillText(`Pᵉ = ${Pe.toFixed(1)}`, PAD_LEFT-70, y+6);
 
-        eqDesc = `Equilibrium from curves: Qᵉ ≈ ${Qe.toFixed(1)}, Pᵉ ≈ ${Pe.toFixed(1)}.`;
+        eqDesc = `Equilibrium: Qᵉ = ${Qe.toFixed(1)}, Pᵉ = ${Pe.toFixed(1)} / 均衡点: Qᵉ = ${Qe.toFixed(1)}, Pᵉ = ${Pe.toFixed(1)}`;
       } else {
-        eqDesc = "The curves have an equilibrium point, but it is outside this grid.";
+        eqDesc = "Equilibrium is outside the visible grid. / 均衡点在可见范围外。";
       }
     } else {
-      eqDesc = "The curves are almost flat. Equilibrium is not clear here.";
+      eqDesc = "The curves are almost flat. Equilibrium is not clear. / 曲线几乎是平的。均衡点不清楚。";
     }
 
     const yPL = pToY(Pline);
     ctx.strokeStyle="#38bdf8";
-    ctx.setLineDash([6,4]);
-    ctx.lineWidth=1.8;
+    ctx.setLineDash([8,4]);
+    ctx.lineWidth=3;
     ctx.beginPath();
     ctx.moveTo(PAD_LEFT,yPL);
     ctx.lineTo(canvas.width-PAD_RIGHT,yPL);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle="#38bdf8";
-    ctx.font="13px system-ui";
-    ctx.fillText("P*", canvas.width-PAD_RIGHT-34, yPL-6);
+    ctx.font="bold 18px system-ui";
+    ctx.strokeStyle="rgba(15,23,42,0.95)";
+    ctx.lineWidth=3;
+    ctx.strokeText(`P* = ${Pline.toFixed(1)}`, canvas.width-PAD_RIGHT-110, yPL-10);
+    ctx.fillText(`P* = ${Pline.toFixed(1)}`, canvas.width-PAD_RIGHT-110, yPL-10);
 
     let Qd=null, Qs=null;
     if(currBD>0.0001) Qd = (currAD - Pline)/currBD;
@@ -511,11 +672,12 @@
     const xQd = qToX(Qd);
     const xQs = qToX(Qs);
 
-    drawDot(xQd,yPL,"#60a5fa",6);
-    drawDot(xQs,yPL,"#22c55e",6);
+    drawDotWithLabel(xQd,yPL,"#60a5fa","Qᵈ",Qd.toFixed(1),9);
+    drawDotWithLabel(xQs,yPL,"#22c55e","Qˢ",Qs.toFixed(1),9);
 
     ctx.setLineDash([4,4]);
     ctx.strokeStyle="#60a5fa";
+    ctx.lineWidth=2;
     ctx.beginPath();
     ctx.moveTo(xQd, yPL);
     ctx.lineTo(xQd, canvas.height - PAD_BOTTOM);
@@ -528,63 +690,68 @@
     ctx.stroke();
     ctx.setLineDash([]);
 
-    ctx.fillStyle="#60a5fa";
-    ctx.font="12px system-ui";
-    ctx.fillText("Qᵈ", xQd-12, canvas.height-PAD_BOTTOM+20);
-
-    ctx.fillStyle="#22c55e";
-    ctx.fillText("Qˢ", xQs-12, canvas.height-PAD_BOTTOM+20);
-
     if(Qd > Qs){
       const startX = xQs;
       const width = xQd - xQs;
       const midX = startX + width/2;
-      ctx.fillStyle="rgba(249,115,115,0.35)";
-      ctx.fillRect(startX, yPL-12, width, 24);
-      ctx.strokeStyle="rgba(248,113,113,0.7)";
-      ctx.strokeRect(startX, yPL-12, width, 24);
+      ctx.fillStyle="rgba(249,115,115,0.5)";
+      ctx.fillRect(startX, yPL-20, width, 40);
+      ctx.strokeStyle="rgba(248,113,113,0.9)";
+      ctx.lineWidth=3;
+      ctx.strokeRect(startX, yPL-20, width, 40);
       ctx.fillStyle="#fecaca";
-      ctx.font="12px system-ui";
-      ctx.fillText("Shortage", midX-28, yPL-18);
+      ctx.font="bold 18px system-ui";
+      ctx.strokeStyle="rgba(15,23,42,0.95)";
+      ctx.lineWidth=3;
+      const gapLabel = `Shortage / 短缺 (${(Qd-Qs).toFixed(1)})`;
+      const gapWidth = ctx.measureText(gapLabel).width;
+      ctx.strokeText(gapLabel, midX-gapWidth/2, yPL-28);
+      ctx.fillText(gapLabel, midX-gapWidth/2, yPL-28);
 
       const gap = (Qd-Qs).toFixed(1);
-      infoDesc = `Shortage at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
+      infoDesc = `Shortage / 短缺: Qᵈ = ${Qd.toFixed(1)}, Qˢ = ${Qs.toFixed(1)}. Gap / 缺口 = ${gap}`;
       mode="shortage";
     } else if(Qs > Qd){
       const startX = xQd;
       const width = xQs - xQd;
       const midX = startX + width/2;
-      ctx.fillStyle="rgba(74,222,128,0.25)";
-      ctx.fillRect(startX, yPL-12, width, 24);
-      ctx.strokeStyle="rgba(74,222,128,0.7)";
-      ctx.strokeRect(startX, yPL-12, width, 24);
+      ctx.fillStyle="rgba(74,222,128,0.4)";
+      ctx.fillRect(startX, yPL-20, width, 40);
+      ctx.strokeStyle="rgba(74,222,128,0.9)";
+      ctx.lineWidth=3;
+      ctx.strokeRect(startX, yPL-20, width, 40);
       ctx.fillStyle="#bbf7d0";
-      ctx.font="12px system-ui";
-      ctx.fillText("Surplus", midX-26, yPL-18);
+      ctx.font="bold 18px system-ui";
+      ctx.strokeStyle="rgba(15,23,42,0.95)";
+      ctx.lineWidth=3;
+      const gapLabel = `Surplus / 过剩 (${(Qs-Qd).toFixed(1)})`;
+      const gapWidth = ctx.measureText(gapLabel).width;
+      ctx.strokeText(gapLabel, midX-gapWidth/2, yPL-28);
+      ctx.fillText(gapLabel, midX-gapWidth/2, yPL-28);
 
       const gap = (Qs-Qd).toFixed(1);
-      infoDesc = `Surplus at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
+      infoDesc = `Surplus / 过剩: Qᵈ = ${Qd.toFixed(1)}, Qˢ = ${Qs.toFixed(1)}. Gap / 过量 = ${gap}`;
       mode="surplus";
     } else {
-      infoDesc = `At this price P* = ${Pline.toFixed(1)}, Qᵈ = Qˢ ≈ ${Qd.toFixed(1)}. No shortage or surplus.`;
+      infoDesc = `At P* = ${Pline.toFixed(1)}, Qᵈ = Qˢ = ${Qd.toFixed(1)}. No shortage or surplus. / 在P* = ${Pline.toFixed(1)}时，Qᵈ = Qˢ = ${Qd.toFixed(1)}。没有短缺或过剩。`;
       mode="eq";
     }
 
     let hint = "";
     if(eqVisible){
       if(mode==="eq"){
-        hint = `You are on the equilibrium point E: Qᵉ ≈ ${Qe.toFixed(1)}, Pᵉ ≈ ${Pe.toFixed(1)}.`;
+        hint = `✅ You are at equilibrium E! / 你在均衡点E！`;
       } else {
-        hint = `To reach equilibrium, move the blue P* line towards Pᵉ ≈ ${Pe.toFixed(1)} so Qᵈ and Qˢ move towards Qᵉ ≈ ${Qe.toFixed(1)}.`;
+        hint = `💡 Tip / 提示: Move P* towards Pᵉ = ${Pe.toFixed(1)} to reach equilibrium. / 移动P*向Pᵉ = ${Pe.toFixed(1)}以达到均衡。`;
       }
     }
 
     statsBox.innerHTML =
-      `<div class="stats-line"><strong>Market:</strong> ${currentMarketLabel}</div>`+
-      `<div class="stats-line"><strong>Perfect equilibrium from curves:</strong> ${eqDesc}</div>`+
-      `<div class="stats-line"><strong>Current price:</strong> P* = ${Pline.toFixed(1)}.</div>`+
-      `<div class="stats-line"><strong>At this price on the curves:</strong> Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}.</div>`+
-      `<div class="stats-line"><strong>Market result:</strong> ${infoDesc}</div>`+
+      `<div class="stats-line"><strong>Market / 市场:</strong> ${currentMarketLabel}</div>`+
+      `<div class="stats-line"><strong>Equilibrium / 均衡:</strong> ${eqDesc}</div>`+
+      `<div class="stats-line"><strong>Current price / 当前价格:</strong> P* = ${Pline.toFixed(1)}</div>`+
+      `<div class="stats-line"><strong>At this price / 在此价格:</strong> Qᵈ = ${Qd.toFixed(1)}, Qˢ = ${Qs.toFixed(1)}</div>`+
+      `<div class="stats-line"><strong>Market result / 市场结果:</strong> ${infoDesc}</div>`+
       (hint ? `<div class="stats-line">${hint}</div>` : "");
 
     setEmoji(mode);
@@ -600,7 +767,7 @@
     const yPL = pToY(Pline);
 
     const distToPrice = Math.abs(y - yPL);
-    const priceThreshold = 14;
+    const priceThreshold = 30;
 
     const w = canvas.width - PAD_LEFT - PAD_RIGHT;
     const q = clamp((x - PAD_LEFT)/w * maxQ, 0, maxQ);
@@ -611,7 +778,7 @@
     const yS = pToY(PsVal);
     const distD = Math.hypot(x-xCurve, y-yD);
     const distS = Math.hypot(x-xCurve, y-yS);
-    const curveThreshold = 16;
+    const curveThreshold = 30;
 
     dragTarget = null;
 
@@ -619,6 +786,7 @@
       dragTarget = "price";
       dragStart = { Pstart: Pline };
       canvas.setPointerCapture(ev.pointerId);
+      canvas.style.cursor = 'grabbing';
       return;
     }
 
@@ -626,17 +794,34 @@
       dragTarget = "demand";
       dragStart = { Pstart: PdVal, aDStart: currAD };
       canvas.setPointerCapture(ev.pointerId);
+      canvas.style.cursor = 'grabbing';
     } else if(distS < curveThreshold){
       dragTarget = "supply";
       dragStart = { Pstart: PsVal, aSStart: currAS };
       canvas.setPointerCapture(ev.pointerId);
+      canvas.style.cursor = 'grabbing';
     }
   }
 
   function handlePointerMove(ev){
-    if(!dragTarget || !dragStart) return;
     const rect = canvas.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
     const y = ev.clientY - rect.top;
+    
+    // Show coordinate display
+    if(x >= PAD_LEFT && x <= canvas.width - PAD_RIGHT && 
+       y >= PAD_TOP && y <= canvas.height - PAD_BOTTOM){
+      const w = canvas.width - PAD_LEFT - PAD_RIGHT;
+      const h = canvas.height - PAD_TOP - PAD_BOTTOM;
+      const q = ((x - PAD_LEFT) / w * maxQ).toFixed(1);
+      const p = ((1 - (y - PAD_TOP) / h) * maxP).toFixed(1);
+      coordDisplay.textContent = `Q: ${q}, P: ${p}`;
+      coordDisplay.style.display = 'block';
+    } else {
+      coordDisplay.style.display = 'none';
+    }
+
+    if(!dragTarget || !dragStart) return;
     const pNew = yToP(y);
 
     if(dragTarget === "price"){
@@ -647,13 +832,13 @@
       let newAD = dragStart.aDStart + deltaP;
       newAD = clamp(newAD, Number(aD.min), Number(aD.max));
       aD.value = newAD;
-      currentMarketLabel = "Custom market";
+      currentMarketLabel = "Custom market / 自定义市场";
     } else if(dragTarget === "supply"){
       const deltaP = pNew - dragStart.Pstart;
       let newAS = dragStart.aSStart + deltaP;
       newAS = clamp(newAS, Number(aS.min), Number(aS.max));
       aS.value = newAS;
-      currentMarketLabel = "Custom market";
+      currentMarketLabel = "Custom market / 自定义市场";
     }
     updateValues();
   }
@@ -663,6 +848,7 @@
       dragTarget=null;
       dragStart=null;
       canvas.releasePointerCapture(ev.pointerId);
+      canvas.style.cursor = 'default';
     }
   }
 
@@ -692,9 +878,48 @@
     applyMarket(e.target.value);
   });
 
+  // Helper functions for scenario buttons
+  window.showEquilibrium = function(){
+    const denom = currBD + currBS;
+    if(denom > 0.0001){
+      const Qe = (currAD - currAS) / denom;
+      const Pe = currAD - currBD * Qe;
+      if(Pe >= Number(priceLine.min) && Pe <= Number(priceLine.max)){
+        priceLine.value = Pe.toFixed(1);
+        updateValues();
+      }
+    }
+  };
+
+  window.showShortage = function(){
+    const denom = currBD + currBS;
+    if(denom > 0.0001){
+      const Qe = (currAD - currAS) / denom;
+      const Pe = currAD - currBD * Qe;
+      const shortagePrice = Math.max(Number(priceLine.min), Pe - 15);
+      priceLine.value = shortagePrice.toFixed(1);
+      updateValues();
+    }
+  };
+
+  window.showSurplus = function(){
+    const denom = currBD + currBS;
+    if(denom > 0.0001){
+      const Qe = (currAD - currAS) / denom;
+      const Pe = currAD - currBD * Qe;
+      const surplusPrice = Math.min(Number(priceLine.max), Pe + 15);
+      priceLine.value = surplusPrice.toFixed(1);
+      updateValues();
+    }
+  };
+
+  window.resetToDefault = function(){
+    applyMarket('bubbletea');
+  };
+
   window.addEventListener("resize",resizeCanvas);
   resizeCanvas();
-  applyMarket("water");
+  applyMarket("bubbletea");
 })();
 </script>
 </body>
