@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Demand & Supply Drag Playground</title>
+<style>
+  :root {
+    --bg:#070b18;
+    --card:#111827;
+    --accent1:#ff5fa2;
+    --accent2:#4ade80;
+    --accent3:#38bdf8;
+    --accent4:#facc15;
+    --accentShort:#f97373;
+    --accentSurp:#4ade80;
+    --text-main:#e5e7eb;
+    --text-soft:#9ca3af;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;padding:16px;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:radial-gradient(circle at top,#1e293b 0,var(--bg) 55%);
+    color:var(--text-main);
+    display:flex;justify-content:center;
+  }
+  .app{max-width:1100px;width:100%;}
+  h1{text-align:center;margin:0 0 6px;font-size:24px;}
+  .hint{text-align:center;font-size:12px;color:var(--text-soft);margin-bottom:10px;}
+  .top-row{display:flex;flex-wrap:wrap;gap:16px;}
+
+  #graph-wrapper{
+    flex:2.2 1 640px;
+    background:linear-gradient(135deg,#020617 0,#020617 40%,#111827 100%);
+    border-radius:18px;
+    padding:14px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.55);
+  }
+  #graph{
+    display:block;
+    width:100%;
+    border-radius:14px;
+    background:radial-gradient(circle at top left,#1f2937 0,#020617 55%);
+    touch-action:none;
+  }
+  .emoji-row{
+    margin-top:10px;
+    text-align:center;
+  }
+  .emoji-box{
+    display:inline-block;
+    padding:10px 20px;
+    border-radius:22px;
+    background:rgba(15,23,42,0.96);
+    border:1px solid rgba(148,163,184,0.7);
+    box-shadow:0 10px 26px rgba(0,0,0,0.55);
+  }
+  .emoji-face{
+    font-size:38px;
+    line-height:1.1;
+  }
+  .emoji-text{
+    font-size:13px;
+    color:var(--text-soft);
+    margin-top:4px;
+    max-width:420px;
+  }
+  .pop{animation:pop 0.45s ease-out;}
+  @keyframes pop{
+    0%{transform:scale(.8);opacity:.6;}
+    40%{transform:scale(1.12);opacity:1;}
+    100%{transform:scale(1);}
+  }
+  .badge-row{
+    display:flex;justify-content:space-between;
+    font-size:13px;margin-top:8px;color:var(--text-soft);
+  }
+  .badge{
+    padding:3px 12px;border-radius:999px;
+    background:rgba(15,23,42,0.9);
+    border:1px solid rgba(148,163,184,0.3);
+  }
+
+  .controls-card{
+    flex:1 1 260px;
+    background:var(--card);
+    border-radius:18px;
+    padding:12px 14px;
+    box-shadow:0 14px 30px rgba(0,0,0,0.6);
+    border:1px solid rgba(148,163,184,0.35);
+  }
+  h2{margin:0 0 4px;font-size:14px;color:var(--text-soft);font-weight:500;}
+
+  .market-row{
+    margin-bottom:8px;
+    font-size:12px;
+  }
+  .market-row label{
+    display:block;
+    margin-bottom:2px;
+  }
+  #marketSelect{
+    width:100%;
+    padding:4px 6px;
+    border-radius:8px;
+    border:1px solid rgba(148,163,184,0.6);
+    background:#020617;
+    color:var(--text-main);
+    font-size:12px;
+  }
+  .market-desc{
+    font-size:11px;
+    color:var(--text-soft);
+    margin-top:3px;
+  }
+
+  .group-label{font-size:13px;font-weight:600;margin:6px 0 2px;}
+  .control-row{display:flex;flex-direction:column;margin-bottom:6px;font-size:12px;}
+  .control-row span{display:flex;justify-content:space-between;gap:4px;}
+  input[type="range"]{width:100%;accent-color:var(--accent3);}
+  .mini{color:var(--text-soft);font-size:11px;}
+  .stats{margin-top:8px;font-size:13px;line-height:1.4;}
+  .stats-line{margin-top:3px;}
+  .legend{margin-top:8px;font-size:11px;color:var(--text-soft);}
+  .legend span{display:inline-flex;align-items:center;margin-right:8px;}
+  .dot{width:10px;height:10px;border-radius:999px;display:inline-block;margin-right:3px;}
+  .dot-demand{background:var(--accent1);}
+  .dot-supply{background:var(--accent2);}
+  .dot-eq{background:var(--accent4);}
+  .dot-price{background:var(--accent3);}
+  .dot-short{background:var(--accentShort);}
+  .dot-surp{background:var(--accentSurp);}
+
+  @media(max-width:820px){
+    #graph-wrapper{order:1;}
+    .controls-card{order:2;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>📈 Demand & Supply Drag Playground</h1>
+  <div class="hint">
+    Drag near 💙 demand or 💚 supply to shift them. Drag the blue price line P* up or down.<br>
+    Watch how Qᵈ and Qˢ slide along their curves and try to land exactly on equilibrium.
+  </div>
+
+  <div class="top-row">
+    <div id="graph-wrapper">
+      <canvas id="graph"></canvas>
+
+      <div class="emoji-row">
+        <div class="emoji-box" id="emojiBox">
+          <div class="emoji-face">😎</div>
+          <div class="emoji-text">
+            Move a curve or the price line. I will explain if you are at equilibrium, in shortage, or in surplus.
+          </div>
+        </div>
+      </div>
+
+      <div class="badge-row">
+        <div class="badge">Y-axis: Price per unit 💰</div>
+        <div class="badge">X-axis: Quantity of goods 📦</div>
+      </div>
+    </div>
+
+    <div class="controls-card">
+      <h2>🎛️ Control the market</h2>
+
+      <div class="market-row">
+        <label for="marketSelect">🛒 Market example</label>
+        <select id="marketSelect">
+          <option value="water">Bottled water (daily necessity)</option>
+          <option value="sneakers">Luxury sneakers</option>
+          <option value="electricity">Home electricity</option>
+          <option value="skins">Online game skins</option>
+        </select>
+        <div class="market-desc" id="marketDesc">
+          Basic good people buy often. Demand is steady, supply is quite flexible.
+        </div>
+      </div>
+
+      <div class="group-label">💙 Demand curve P = a<sub>D</sub> − b<sub>D</sub>Q</div>
+      <div class="control-row">
+        <span><span>Intercept a<sub>D</sub> (height of demand)</span><span id="aDVal"></span></span>
+        <input id="aD" type="range" min="30" max="100" step="1" value="80">
+      </div>
+      <div class="control-row">
+        <span><span>Slope b<sub>D</sub> (how fast Q falls)</span><span id="bDVal"></span></span>
+        <input id="bD" type="range" min="15" max="90" step="5" value="40">
+      </div>
+
+      <div class="group-label">💚 Supply curve P = a<sub>S</sub> + b<sub>S</sub>Q</div>
+      <div class="control-row">
+        <span><span>Intercept a<sub>S</sub> (starting cost level)</span><span id="aSVal"></span></span>
+        <input id="aS" type="range" min="0" max="60" step="1" value="20">
+      </div>
+      <div class="control-row">
+        <span><span>Slope b<sub>S</sub> (how fast P rises)</span><span id="bSVal"></span></span>
+        <input id="bS" type="range" min="10" max="80" step="5" value="30">
+      </div>
+
+      <div class="group-label">📏 Price level</div>
+      <div class="control-row">
+        <span><span>Price line P*</span><span id="pVal"></span></span>
+        <input id="priceLine" type="range" min="5" max="95" step="1" value="50">
+      </div>
+      <div class="mini">
+        Move P* with this slider or drag the blue line on the graph.<br>
+        At that P*, the blue dot is Qᵈ on the demand curve and the green dot is Qˢ on the supply curve.
+      </div>
+
+      <div class="stats" id="statsBox"></div>
+
+      <div class="legend">
+        <span><span class="dot dot-demand"></span>Demand (D)</span>
+        <span><span class="dot dot-supply"></span>Supply (S)</span>
+        <span><span class="dot dot-eq"></span>Equilibrium E(Qᵉ,Pᵉ)</span><br>
+        <span><span class="dot dot-price"></span>Price line P*</span>
+        <span><span class="dot dot-short"></span>Shortage area</span>
+        <span><span class="dot dot-surp"></span>Surplus area</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById("graph");
+  const ctx = canvas.getContext("2d");
+  const PAD_LEFT = 70, PAD_RIGHT = 40, PAD_TOP = 40, PAD_BOTTOM = 60;
+  const maxQ = 100, maxP = 100;
+
+  const aD = document.getElementById("aD");
+  const bD = document.getElementById("bD");
+  const aS = document.getElementById("aS");
+  const bS = document.getElementById("bS");
+  const priceLine = document.getElementById("priceLine");
+
+  const aDVal = document.getElementById("aDVal");
+  const bDVal = document.getElementById("bDVal");
+  const aSVal = document.getElementById("aSVal");
+  const bSVal = document.getElementById("bSVal");
+  const pVal  = document.getElementById("pVal");
+  const statsBox = document.getElementById("statsBox");
+  const emojiBox = document.getElementById("emojiBox");
+
+  const marketSelect = document.getElementById("marketSelect");
+  const marketDescEl = document.getElementById("marketDesc");
+
+  const markets = {
+    water: {
+      label: "Bottled water (daily necessity)",
+      aD: 90,  // high max willingness to pay
+      bD: 50,  // moderate slope
+      aS: 10,  // low base cost
+      bS: 25,  // moderate supply slope
+      price: 37,
+      desc: "People buy it very often. Demand is steady; firms can adjust supply fairly easily."
+    },
+    sneakers: {
+      label: "Luxury sneakers",
+      aD: 110, // strong brand desire at high price
+      bD: 70,  // demand drops faster when price rises
+      aS: 30,  // higher base cost
+      bS: 25,  // moderate supply slope
+      price: 51,
+      desc: "Fashion item. When price rises too much, many buyers step back. Supply is flexible but not free."
+    },
+    electricity: {
+      label: "Home electricity",
+      aD: 100, // people depend on it
+      bD: 25,  // more inelastic demand
+      aS: 15,  // some fixed costs
+      bS: 55,  // steeper supply slope
+      price: 73,
+      desc: "Basic necessity. Demand is less sensitive to price in the short run, supply costs rise faster at higher output."
+    },
+    skins: {
+      label: "Online game skins",
+      aD: 70,
+      bD: 55,  // quite price sensitive
+      aS: 0,   // almost zero marginal cost
+      bS: 15,  // very flat, elastic supply
+      price: 15,
+      desc: "Digital good. Very cheap to supply extra units; demand depends strongly on how high the price is."
+    }
+  };
+
+  let currAD=80, currBD=1, currAS=20, currBS=1;
+  let dragTarget=null;
+  let dragStart=null;
+  let currentMarketLabel = "Custom market";
+
+  function resizeCanvas(){
+    const wrapper = document.getElementById("graph-wrapper");
+    const w = wrapper.clientWidth - 28;
+    const h = Math.max(380, w * 0.75);
+    canvas.width = w;
+    canvas.height = h;
+    updateValues();
+  }
+
+  function qToX(q){
+    const w = canvas.width - PAD_LEFT - PAD_RIGHT;
+    return PAD_LEFT + (q / maxQ) * w;
+  }
+  function pToY(p){
+    const h = canvas.height - PAD_TOP - PAD_BOTTOM;
+    return PAD_TOP + (1 - p / maxP) * h;
+  }
+  function yToP(y){
+    const h = canvas.height - PAD_TOP - PAD_BOTTOM;
+    const rel = (y - PAD_TOP) / h;
+    return (1 - rel) * maxP;
+  }
+
+  function drawAxes(){
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(PAD_LEFT, PAD_TOP);
+    ctx.lineTo(PAD_LEFT, canvas.height - PAD_BOTTOM);
+    ctx.lineTo(canvas.width - PAD_RIGHT, canvas.height - PAD_BOTTOM);
+    ctx.stroke();
+
+    ctx.fillStyle = "#e5e7eb";
+    ctx.font = "17px system-ui";
+    ctx.fillText("Price 💰", 14, PAD_TOP - 10);
+    ctx.fillText("Quantity 📦", canvas.width - PAD_RIGHT - 100, canvas.height - 12);
+
+    ctx.fillStyle = "#9ca3af";
+    ctx.font = "14px system-ui";
+    for(let p=20;p<=100;p+=20){
+      const y = pToY(p);
+      ctx.beginPath();
+      ctx.moveTo(PAD_LEFT-6, y);
+      ctx.lineTo(PAD_LEFT+6, y);
+      ctx.stroke();
+      ctx.fillText(p.toString(), 20, y+4);
+    }
+    for(let q=20;q<=100;q+=20){
+      const x = qToX(q);
+      ctx.beginPath();
+      ctx.moveTo(x, canvas.height - PAD_BOTTOM - 6);
+      ctx.lineTo(x, canvas.height - PAD_BOTTOM + 6);
+      ctx.stroke();
+      ctx.fillText(q.toString(), x-9, canvas.height - 32);
+    }
+  }
+
+  function drawCurve(color, fnP){
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.6;
+    ctx.beginPath();
+    let started=false;
+    for(let q=0;q<=maxQ;q+=1){
+      const p = fnP(q);
+      if(p<0||p>maxP) continue;
+      const x=qToX(q), y=pToY(p);
+      if(!started){ctx.moveTo(x,y);started=true;}
+      else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+
+  function drawDot(x,y,color,r=5){
+    ctx.fillStyle=color;
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle="rgba(15,23,42,0.9)";
+    ctx.lineWidth=1;
+    ctx.stroke();
+  }
+
+  function labelCurve(letter, color, qPos){
+    const Pd = q => currAD - currBD*q;
+    const Ps = q => currAS + currBS*q;
+    let pVal;
+    if(letter === "D") pVal = Pd(qPos);
+    else pVal = Ps(qPos);
+    if(pVal<0||pVal>maxP) return;
+    const x = qToX(qPos);
+    const y = pToY(pVal);
+    ctx.font = "bold 21px system-ui";
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "rgba(15,23,42,0.95)";
+    ctx.strokeText(letter, x+12, y-10);
+    ctx.fillStyle = color;
+    ctx.fillText(letter, x+12, y-10);
+  }
+
+  function setEmoji(mode){
+    let emoji="😶", text="Move the price line or a curve. I will explain what the market is doing.";
+    if(mode==="eq"){
+      emoji="🤝😎";
+      text="You are on equilibrium. At this price, quantity demanded equals quantity supplied.";
+    } else if(mode==="shortage"){
+      emoji="🥺📉";
+      text="Shortage. At this price, buyers want more than firms are willing to sell.";
+    } else if(mode==="surplus"){
+      emoji="😵‍💫📈";
+      text="Surplus. At this price, firms want to sell more than buyers want to buy.";
+    }
+    emojiBox.innerHTML=
+      `<div class="emoji-face">${emoji}</div>`+
+      `<div class="emoji-text">${text}</div>`;
+    emojiBox.classList.remove("pop");
+    void emojiBox.offsetWidth;
+    emojiBox.classList.add("pop");
+  }
+
+  function updateValues(){
+    currAD = Number(aD.value);
+    currBD = Number(bD.value)/40;
+    currAS = Number(aS.value);
+    currBS = Number(bS.value)/40;
+    const Pline = Number(priceLine.value);
+
+    aDVal.textContent = currAD.toFixed(0);
+    bDVal.textContent = currBD.toFixed(2);
+    aSVal.textContent = currAS.toFixed(0);
+    bSVal.textContent = currBS.toFixed(2);
+    pVal.textContent  = Pline.toFixed(0);
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawAxes();
+
+    const Pd = q => currAD - currBD * q;
+    const Ps = q => currAS + currBS * q;
+
+    drawCurve("#ff5fa2", Pd);
+    drawCurve("#4ade80", Ps);
+
+    labelCurve("D","#ff5fa2", 65);
+    labelCurve("S","#4ade80", 35);
+
+    let eqVisible=false;
+    let Qe=null, Pe=null;
+    let eqDesc="";
+
+    const denom = currBD + currBS;
+    if(denom>0.0001){
+      Qe = (currAD - currAS) / denom;
+      Pe = Pd(Qe);
+      if(Qe>=0 && Qe<=maxQ && Pe>=0 && Pe<=maxP){
+        eqVisible = true;
+        const x = qToX(Qe), y = pToY(Pe);
+
+        ctx.setLineDash([4,4]);
+        ctx.strokeStyle="#facc15";
+        ctx.lineWidth=1.4;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, canvas.height - PAD_BOTTOM);
+        ctx.moveTo(PAD_LEFT, y);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        drawDot(x,y,"#facc15",7);
+        ctx.fillStyle="#facc15";
+        ctx.font="13px system-ui";
+        ctx.fillText("E",x+8,y-6);
+
+        ctx.fillStyle="#facc15";
+        ctx.font="12px system-ui";
+        ctx.fillText("Qᵉ", x-12, canvas.height-PAD_BOTTOM+20);
+        ctx.fillText("Pᵉ", PAD_LEFT-26, y+4);
+
+        eqDesc = `Equilibrium from curves: Qᵉ ≈ ${Qe.toFixed(1)}, Pᵉ ≈ ${Pe.toFixed(1)}.`;
+      } else {
+        eqDesc = "The curves have an equilibrium point, but it is outside this grid.";
+      }
+    } else {
+      eqDesc = "The curves are almost flat. Equilibrium is not clear here.";
+    }
+
+    const yPL = pToY(Pline);
+    ctx.strokeStyle="#38bdf8";
+    ctx.setLineDash([6,4]);
+    ctx.lineWidth=1.8;
+    ctx.beginPath();
+    ctx.moveTo(PAD_LEFT,yPL);
+    ctx.lineTo(canvas.width-PAD_RIGHT,yPL);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle="#38bdf8";
+    ctx.font="13px system-ui";
+    ctx.fillText("P*", canvas.width-PAD_RIGHT-34, yPL-6);
+
+    let Qd=null, Qs=null;
+    if(currBD>0.0001) Qd = (currAD - Pline)/currBD;
+    if(currBS>0.0001) Qs = (Pline - currAS)/currBS;
+
+    let mode="none";
+    let infoDesc="";
+
+    if(Qd===null || Qs===null || isNaN(Qd) || isNaN(Qs) ||
+       Qd<0 || Qd>maxQ || Qs<0 || Qs>maxQ){
+      statsBox.innerHTML =
+        `<div class="stats-line"><strong>Market:</strong> ${currentMarketLabel}</div>`+
+        `<div class="stats-line"><strong>Equilibrium:</strong> ${eqDesc}</div>`+
+        `<div class="stats-line"><strong>Current price:</strong> P* = ${Pline.toFixed(1)}.</div>`+
+        `<div class="stats-line">At this price, one of the curves does not meet the price line inside the grid. Move P* or shift the curves.</div>`;
+      setEmoji("none");
+      return;
+    }
+
+    const xQd = qToX(Qd);
+    const xQs = qToX(Qs);
+
+    drawDot(xQd,yPL,"#60a5fa",6);
+    drawDot(xQs,yPL,"#22c55e",6);
+
+    ctx.setLineDash([4,4]);
+    ctx.strokeStyle="#60a5fa";
+    ctx.beginPath();
+    ctx.moveTo(xQd, yPL);
+    ctx.lineTo(xQd, canvas.height - PAD_BOTTOM);
+    ctx.stroke();
+
+    ctx.strokeStyle="#22c55e";
+    ctx.beginPath();
+    ctx.moveTo(xQs, yPL);
+    ctx.lineTo(xQs, canvas.height - PAD_BOTTOM);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle="#60a5fa";
+    ctx.font="12px system-ui";
+    ctx.fillText("Qᵈ", xQd-12, canvas.height-PAD_BOTTOM+20);
+
+    ctx.fillStyle="#22c55e";
+    ctx.fillText("Qˢ", xQs-12, canvas.height-PAD_BOTTOM+20);
+
+    if(Qd > Qs){
+      const startX = xQs;
+      const width = xQd - xQs;
+      const midX = startX + width/2;
+      ctx.fillStyle="rgba(249,115,115,0.35)";
+      ctx.fillRect(startX, yPL-12, width, 24);
+      ctx.strokeStyle="rgba(248,113,113,0.7)";
+      ctx.strokeRect(startX, yPL-12, width, 24);
+      ctx.fillStyle="#fecaca";
+      ctx.font="12px system-ui";
+      ctx.fillText("Shortage", midX-28, yPL-18);
+
+      const gap = (Qd-Qs).toFixed(1);
+      infoDesc = `Shortage at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
+      mode="shortage";
+    } else if(Qs > Qd){
+      const startX = xQd;
+      const width = xQs - xQd;
+      const midX = startX + width/2;
+      ctx.fillStyle="rgba(74,222,128,0.25)";
+      ctx.fillRect(startX, yPL-12, width, 24);
+      ctx.strokeStyle="rgba(74,222,128,0.7)";
+      ctx.strokeRect(startX, yPL-12, width, 24);
+      ctx.fillStyle="#bbf7d0";
+      ctx.font="12px system-ui";
+      ctx.fillText("Surplus", midX-26, yPL-18);
+
+      const gap = (Qs-Qd).toFixed(1);
+      infoDesc = `Surplus at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
+      mode="surplus";
+    } else {
+      infoDesc = `At this price P* = ${Pline.toFixed(1)}, Qᵈ = Qˢ ≈ ${Qd.toFixed(1)}. No shortage or surplus.`;
+      mode="eq";
+    }
+
+    let hint = "";
+    if(eqVisible){
+      if(mode==="eq"){
+        hint = `You are on the equilibrium point E: Qᵉ ≈ ${Qe.toFixed(1)}, Pᵉ ≈ ${Pe.toFixed(1)}.`;
+      } else {
+        hint = `To reach equilibrium, move the blue P* line towards Pᵉ ≈ ${Pe.toFixed(1)} so Qᵈ and Qˢ move towards Qᵉ ≈ ${Qe.toFixed(1)}.`;
+      }
+    }
+
+    statsBox.innerHTML =
+      `<div class="stats-line"><strong>Market:</strong> ${currentMarketLabel}</div>`+
+      `<div class="stats-line"><strong>Perfect equilibrium from curves:</strong> ${eqDesc}</div>`+
+      `<div class="stats-line"><strong>Current price:</strong> P* = ${Pline.toFixed(1)}.</div>`+
+      `<div class="stats-line"><strong>At this price on the curves:</strong> Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}.</div>`+
+      `<div class="stats-line"><strong>Market result:</strong> ${infoDesc}</div>`+
+      (hint ? `<div class="stats-line">${hint}</div>` : "");
+
+    setEmoji(mode);
+  }
+
+  function clamp(v,min,max){return v<min?min:v>max?max:v;}
+
+  function handlePointerDown(ev){
+    const rect = canvas.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
+    const y = ev.clientY - rect.top;
+    const Pline = Number(priceLine.value);
+    const yPL = pToY(Pline);
+
+    const distToPrice = Math.abs(y - yPL);
+    const priceThreshold = 14;
+
+    const w = canvas.width - PAD_LEFT - PAD_RIGHT;
+    const q = clamp((x - PAD_LEFT)/w * maxQ, 0, maxQ);
+    const PdVal = currAD - currBD * q;
+    const PsVal = currAS + currBS * q;
+    const xCurve = qToX(q);
+    const yD = pToY(PdVal);
+    const yS = pToY(PsVal);
+    const distD = Math.hypot(x-xCurve, y-yD);
+    const distS = Math.hypot(x-xCurve, y-yS);
+    const curveThreshold = 16;
+
+    dragTarget = null;
+
+    if(distToPrice < priceThreshold){
+      dragTarget = "price";
+      dragStart = { Pstart: Pline };
+      canvas.setPointerCapture(ev.pointerId);
+      return;
+    }
+
+    if(distD < curveThreshold && distD <= distS){
+      dragTarget = "demand";
+      dragStart = { Pstart: PdVal, aDStart: currAD };
+      canvas.setPointerCapture(ev.pointerId);
+    } else if(distS < curveThreshold){
+      dragTarget = "supply";
+      dragStart = { Pstart: PsVal, aSStart: currAS };
+      canvas.setPointerCapture(ev.pointerId);
+    }
+  }
+
+  function handlePointerMove(ev){
+    if(!dragTarget || !dragStart) return;
+    const rect = canvas.getBoundingClientRect();
+    const y = ev.clientY - rect.top;
+    const pNew = yToP(y);
+
+    if(dragTarget === "price"){
+      let newP = clamp(pNew, Number(priceLine.min), Number(priceLine.max));
+      priceLine.value = newP;
+    } else if(dragTarget === "demand"){
+      const deltaP = pNew - dragStart.Pstart;
+      let newAD = dragStart.aDStart + deltaP;
+      newAD = clamp(newAD, Number(aD.min), Number(aD.max));
+      aD.value = newAD;
+      currentMarketLabel = "Custom market";
+    } else if(dragTarget === "supply"){
+      const deltaP = pNew - dragStart.Pstart;
+      let newAS = dragStart.aSStart + deltaP;
+      newAS = clamp(newAS, Number(aS.min), Number(aS.max));
+      aS.value = newAS;
+      currentMarketLabel = "Custom market";
+    }
+    updateValues();
+  }
+
+  function handlePointerUp(ev){
+    if(dragTarget){
+      dragTarget=null;
+      dragStart=null;
+      canvas.releasePointerCapture(ev.pointerId);
+    }
+  }
+
+  function applyMarket(key){
+    const m = markets[key];
+    if(!m) return;
+    currentMarketLabel = m.label;
+    aD.value = m.aD;
+    bD.value = m.bD;
+    aS.value = m.aS;
+    bS.value = m.bS;
+    priceLine.value = m.price;
+    marketDescEl.textContent = m.desc;
+    updateValues();
+  }
+
+  [aD,bD,aS,bS,priceLine].forEach(el=>{
+    el.addEventListener("input",updateValues);
+  });
+
+  canvas.addEventListener("pointerdown",handlePointerDown);
+  canvas.addEventListener("pointermove",handlePointerMove);
+  canvas.addEventListener("pointerup",handlePointerUp);
+  canvas.addEventListener("pointerleave",handlePointerUp);
+
+  marketSelect.addEventListener("change",e=>{
+    applyMarket(e.target.value);
+  });
+
+  window.addEventListener("resize",resizeCanvas);
+  resizeCanvas();
+  applyMarket("water");
+})();
+</script>
+</body>
+</html>
