@@ -284,34 +284,55 @@
       <div class="market-row">
         <label for="marketSelect">🛒 Market example / 市场示例</label>
         <select id="marketSelect">
-          <option value="bubbletea">Bubble Tea 奶茶</option>
-          <option value="smartphone">Smartphone 智能手机</option>
-          <option value="movieticket">Movie Ticket 电影票</option>
-          <option value="schoolsupplies">School Supplies 学习用品</option>
+          <optgroup label="Elastic Products / 需求弹性大的产品 (steep slope / 陡斜率)">
+            <option value="luxurycar">Luxury Car 豪华车 (Very Elastic)</option>
+            <option value="bubbletea">Bubble Tea 奶茶 (Elastic)</option>
+            <option value="smartphone">Smartphone 智能手机 (Elastic)</option>
+            <option value="snacks">Snacks 零食 (Elastic)</option>
+            <option value="movieticket">Movie Ticket 电影票 (Elastic)</option>
+          </optgroup>
+          <optgroup label="Moderate Elasticity / 弹性适中">
+            <option value="schoolsupplies">School Supplies 学习用品</option>
+          </optgroup>
+          <optgroup label="Inelastic Products / 需求无弹性的产品 (flat slope / 平缓斜率)">
+            <option value="rice">Rice 大米 (Inelastic)</option>
+            <option value="medicine">Medicine 药品 (Inelastic)</option>
+            <option value="electricity">Electricity 电力 (Inelastic)</option>
+          </optgroup>
         </select>
         <div class="market-desc" id="marketDesc">
-          Popular drink in China. High demand, flexible supply.<br>
-          中国流行饮料。需求高，供应灵活。
+          Popular drink with many alternatives. ELASTIC demand (steep slope) - people easily switch to other drinks if price rises.<br>
+          流行饮料，有很多替代品。需求弹性大 - 价格上涨时人们容易改喝其他饮料。
+        </div>
+      </div>
+
+      <div class="elasticity-explainer" style="background:rgba(56,189,248,0.1);padding:12px;border-radius:12px;margin-bottom:12px;border:2px solid rgba(56,189,248,0.3);">
+        <div style="font-size:16px;font-weight:600;margin-bottom:6px;">📚 What is Slope? (Elasticity / 弹性)</div>
+        <div style="font-size:15px;line-height:1.6;">
+          <strong>Slope = How Responsive / 斜率 = 反应程度</strong><br>
+          <strong style="color:#4ade80;">• Steep slope (陡) = ELASTIC</strong> - Big Q change when P changes. Easy to switch products.<br>
+          <strong style="color:#facc15;">• Flat slope (平) = INELASTIC</strong> - Small Q change when P changes. Must buy regardless of price.<br>
+          <span style="font-size:14px;color:var(--text-soft);">Examples: Luxury items are elastic (steep). Necessities like medicine are inelastic (flat).</span>
         </div>
       </div>
 
       <div class="group-label">💙 Demand curve / 需求曲线 P = a<sub>D</sub> − b<sub>D</sub>Q</div>
       <div class="control-row">
-        <span><span>Intercept a<sub>D</sub> (max willingness to pay / 最高支付意愿)</span><span id="aDVal"></span></span>
+        <span><span>Intercept a<sub>D</sub> (highest price buyers will pay / 买家愿付最高价)</span><span id="aDVal"></span></span>
         <input id="aD" type="range" min="30" max="100" step="1" value="80">
       </div>
       <div class="control-row">
-        <span><span>Slope b<sub>D</sub> (how fast Q falls / 需求下降速度)</span><span id="bDVal"></span></span>
+        <span><span>Slope b<sub>D</sub> (steepness = how much Q changes / 斜率 = Q变化多少)</span><span id="bDVal"></span></span>
         <input id="bD" type="range" min="15" max="90" step="5" value="40">
       </div>
 
       <div class="group-label">💚 Supply curve / 供给曲线 P = a<sub>S</sub> + b<sub>S</sub>Q</div>
       <div class="control-row">
-        <span><span>Intercept a<sub>S</sub> (starting cost level / 起始成本)</span><span id="aSVal"></span></span>
+        <span><span>Intercept a<sub>S</sub> (lowest price sellers accept / 卖家接受最低价)</span><span id="aSVal"></span></span>
         <input id="aS" type="range" min="0" max="60" step="1" value="20">
       </div>
       <div class="control-row">
-        <span><span>Slope b<sub>S</sub> (how fast P rises / 价格上升速度)</span><span id="bSVal"></span></span>
+        <span><span>Slope b<sub>S</sub> (steepness = how fast cost rises / 斜率 = 成本上升速度)</span><span id="bSVal"></span></span>
         <input id="bS" type="range" min="10" max="80" step="5" value="30">
       </div>
 
@@ -373,7 +394,8 @@
       aS: 15,
       bS: 30,
       price: 42,
-      desc: "Popular drink in China. High demand, flexible supply. 中国流行饮料。需求高，供应灵活。"
+      desc: "Popular drink with many alternatives. ELASTIC demand (steep slope) - people easily switch to other drinks if price rises. 流行饮料，有很多替代品。需求弹性大 - 价格上涨时人们容易改喝其他饮料。",
+      elasticity: "elastic"
     },
     smartphone: {
       label: "Smartphone 智能手机",
@@ -382,7 +404,8 @@
       aS: 35,
       bS: 30,
       price: 58,
-      desc: "High-tech product. Strong brand loyalty, expensive to produce. 高科技产品。品牌忠诚度高，生产成本高。"
+      desc: "High-tech necessity. ELASTIC demand (steep slope) - people delay purchase if too expensive. 高科技必需品。需求弹性大 - 太贵时人们会推迟购买。",
+      elasticity: "elastic"
     },
     movieticket: {
       label: "Movie Ticket 电影票",
@@ -391,7 +414,8 @@
       aS: 10,
       bS: 35,
       price: 38,
-      desc: "Entertainment good. Demand varies by film popularity. 娱乐产品。需求随电影热度变化。"
+      desc: "Entertainment choice. ELASTIC demand (steeper slope) - many entertainment alternatives. 娱乐选择。需求弹性大 - 有很多娱乐替代品。",
+      elasticity: "elastic"
     },
     schoolsupplies: {
       label: "School Supplies 学习用品",
@@ -400,7 +424,58 @@
       aS: 8,
       bS: 25,
       price: 28,
-      desc: "Student necessity. Steady demand, especially before school year. 学生必需品。需求稳定，特别是开学前。"
+      desc: "Student necessity. MODERATE elasticity - students need them but may buy less if expensive. 学生必需品。弹性适中 - 学生需要但太贵会少买。",
+      elasticity: "moderate"
+    },
+    medicine: {
+      label: "Medicine 药品",
+      aD: 110,
+      bD: 20,
+      aS: 25,
+      bS: 40,
+      price: 58,
+      desc: "Health necessity. INELASTIC demand (flat slope) - people buy regardless of price when sick. 健康必需品。需求无弹性（平缓斜率）- 生病时无论价格都会买。",
+      elasticity: "inelastic"
+    },
+    electricity: {
+      label: "Electricity 电力",
+      aD: 105,
+      bD: 18,
+      aS: 20,
+      bS: 50,
+      price: 65,
+      desc: "Daily necessity. INELASTIC demand (very flat slope) - people need it and cannot easily reduce use. 日常必需。需求无弹性（很平缓）- 人们需要且难以减少使用。",
+      elasticity: "inelastic"
+    },
+    rice: {
+      label: "Rice 大米",
+      aD: 95,
+      bD: 15,
+      aS: 12,
+      bS: 35,
+      price: 48,
+      desc: "Staple food. INELASTIC demand (flat slope) - main food source, people must buy it. 主食。需求无弹性（平缓斜率）- 主要食物来源，人们必须购买。",
+      elasticity: "inelastic"
+    },
+    luxurycar: {
+      label: "Luxury Car 豪华车",
+      aD: 130,
+      bD: 85,
+      aS: 45,
+      bS: 35,
+      price: 65,
+      desc: "Luxury item. HIGHLY ELASTIC demand (very steep) - only buy when price is right. 奢侈品。高度弹性需求（很陡）- 只在价格合适时购买。",
+      elasticity: "very-elastic"
+    },
+    snacks: {
+      label: "Snacks 零食",
+      aD: 80,
+      bD: 50,
+      aS: 8,
+      bS: 22,
+      price: 32,
+      desc: "Optional treats. ELASTIC demand (steep slope) - easy to skip if expensive. 可选零食。需求弹性大（陡斜率）- 太贵就不买。",
+      elasticity: "elastic"
     }
   };
 
@@ -609,23 +684,45 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Draw equilibrium point with glow
-        drawDot(x,y,"#facc15",10);
+        // Draw equilibrium point with LARGE pulsing glow
+        // Add outer glow rings
+        ctx.fillStyle="rgba(250,204,21,0.2)";
+        ctx.beginPath();
+        ctx.arc(x,y,22,0,Math.PI*2);
+        ctx.fill();
         
+        ctx.fillStyle="rgba(250,204,21,0.4)";
+        ctx.beginPath();
+        ctx.arc(x,y,16,0,Math.PI*2);
+        ctx.fill();
+        
+        // Draw main equilibrium dot - MUCH LARGER
+        drawDot(x,y,"#facc15",14);
+        
+        // Draw thick outline
+        ctx.strokeStyle="#facc15";
+        ctx.lineWidth=4;
+        ctx.beginPath();
+        ctx.arc(x,y,14,0,Math.PI*2);
+        ctx.stroke();
+        
+        // Draw "E" label LARGER
         ctx.fillStyle="#facc15";
-        ctx.font="bold 18px system-ui";
+        ctx.font="bold 28px system-ui";
         ctx.strokeStyle="rgba(15,23,42,0.95)";
-        ctx.lineWidth=3;
-        ctx.strokeText("E",x+12,y-8);
-        ctx.fillText("E",x+12,y-8);
+        ctx.lineWidth=4;
+        ctx.strokeText("E",x+20,y-10);
+        ctx.fillText("E",x+20,y-10);
 
         ctx.fillStyle="#facc15";
-        ctx.font="bold 16px system-ui";
-        ctx.strokeText(`Qᵉ = ${Qe.toFixed(1)}`, x-50, canvas.height-PAD_BOTTOM+28);
-        ctx.fillText(`Qᵉ = ${Qe.toFixed(1)}`, x-50, canvas.height-PAD_BOTTOM+28);
+        ctx.font="bold 20px system-ui";
+        ctx.strokeStyle="rgba(15,23,42,0.95)";
+        ctx.lineWidth=4;
+        ctx.strokeText(`Qᵉ = ${Qe.toFixed(1)}`, x-60, canvas.height-PAD_BOTTOM+32);
+        ctx.fillText(`Qᵉ = ${Qe.toFixed(1)}`, x-60, canvas.height-PAD_BOTTOM+32);
         
-        ctx.strokeText(`Pᵉ = ${Pe.toFixed(1)}`, PAD_LEFT-70, y+6);
-        ctx.fillText(`Pᵉ = ${Pe.toFixed(1)}`, PAD_LEFT-70, y+6);
+        ctx.strokeText(`Pᵉ = ${Pe.toFixed(1)}`, PAD_LEFT-75, y+8);
+        ctx.fillText(`Pᵉ = ${Pe.toFixed(1)}`, PAD_LEFT-75, y+8);
 
         eqDesc = `Equilibrium: Qᵉ = ${Qe.toFixed(1)}, Pᵉ = ${Pe.toFixed(1)} / 均衡点: Qᵉ = ${Qe.toFixed(1)}, Pᵉ = ${Pe.toFixed(1)}`;
       } else {
@@ -694,19 +791,37 @@
       const startX = xQs;
       const width = xQd - xQs;
       const midX = startX + width/2;
-      ctx.fillStyle="rgba(249,115,115,0.5)";
-      ctx.fillRect(startX, yPL-20, width, 40);
-      ctx.strokeStyle="rgba(248,113,113,0.9)";
-      ctx.lineWidth=3;
-      ctx.strokeRect(startX, yPL-20, width, 40);
-      ctx.fillStyle="#fecaca";
-      ctx.font="bold 18px system-ui";
+      
+      // Enhanced shortage visualization - MUCH MORE VISIBLE
+      // Draw filled area from bottom to price line
+      const areaHeight = canvas.height - PAD_BOTTOM - yPL;
+      ctx.fillStyle="rgba(249,115,115,0.65)";
+      ctx.fillRect(startX, yPL, width, areaHeight);
+      
+      // Add horizontal bar at price line level for emphasis
+      ctx.fillStyle="rgba(249,115,115,0.85)";
+      ctx.fillRect(startX, yPL-25, width, 50);
+      
+      // Thick border
+      ctx.strokeStyle="#f87171";
+      ctx.lineWidth=4;
+      ctx.strokeRect(startX, yPL-25, width, 50);
+      
+      // Label with LARGE text
+      ctx.fillStyle="#fff";
+      ctx.font="bold 22px system-ui";
       ctx.strokeStyle="rgba(15,23,42,0.95)";
-      ctx.lineWidth=3;
-      const gapLabel = `Shortage / 短缺 (${(Qd-Qs).toFixed(1)})`;
+      ctx.lineWidth=4;
+      const gapLabel = `Shortage / 短缺`;
+      const gapNum = `Gap: ${(Qd-Qs).toFixed(1)}`;
       const gapWidth = ctx.measureText(gapLabel).width;
-      ctx.strokeText(gapLabel, midX-gapWidth/2, yPL-28);
-      ctx.fillText(gapLabel, midX-gapWidth/2, yPL-28);
+      ctx.strokeText(gapLabel, midX-gapWidth/2, yPL-30);
+      ctx.fillText(gapLabel, midX-gapWidth/2, yPL-30);
+      
+      const numWidth = ctx.measureText(gapNum).width;
+      ctx.font="bold 20px system-ui";
+      ctx.strokeText(gapNum, midX-numWidth/2, yPL+8);
+      ctx.fillText(gapNum, midX-numWidth/2, yPL+8);
 
       const gap = (Qd-Qs).toFixed(1);
       infoDesc = `Shortage / 短缺: Qᵈ = ${Qd.toFixed(1)}, Qˢ = ${Qs.toFixed(1)}. Gap / 缺口 = ${gap}`;
@@ -715,19 +830,37 @@
       const startX = xQd;
       const width = xQs - xQd;
       const midX = startX + width/2;
-      ctx.fillStyle="rgba(74,222,128,0.4)";
-      ctx.fillRect(startX, yPL-20, width, 40);
-      ctx.strokeStyle="rgba(74,222,128,0.9)";
-      ctx.lineWidth=3;
-      ctx.strokeRect(startX, yPL-20, width, 40);
-      ctx.fillStyle="#bbf7d0";
-      ctx.font="bold 18px system-ui";
+      
+      // Enhanced surplus visualization - MUCH MORE VISIBLE
+      // Draw filled area from bottom to price line
+      const areaHeight = canvas.height - PAD_BOTTOM - yPL;
+      ctx.fillStyle="rgba(74,222,128,0.55)";
+      ctx.fillRect(startX, yPL, width, areaHeight);
+      
+      // Add horizontal bar at price line level for emphasis
+      ctx.fillStyle="rgba(74,222,128,0.75)";
+      ctx.fillRect(startX, yPL-25, width, 50);
+      
+      // Thick border
+      ctx.strokeStyle="#4ade80";
+      ctx.lineWidth=4;
+      ctx.strokeRect(startX, yPL-25, width, 50);
+      
+      // Label with LARGE text
+      ctx.fillStyle="#fff";
+      ctx.font="bold 22px system-ui";
       ctx.strokeStyle="rgba(15,23,42,0.95)";
-      ctx.lineWidth=3;
-      const gapLabel = `Surplus / 过剩 (${(Qs-Qd).toFixed(1)})`;
+      ctx.lineWidth=4;
+      const gapLabel = `Surplus / 过剩`;
+      const gapNum = `Gap: ${(Qs-Qd).toFixed(1)}`;
       const gapWidth = ctx.measureText(gapLabel).width;
-      ctx.strokeText(gapLabel, midX-gapWidth/2, yPL-28);
-      ctx.fillText(gapLabel, midX-gapWidth/2, yPL-28);
+      ctx.strokeText(gapLabel, midX-gapWidth/2, yPL-30);
+      ctx.fillText(gapLabel, midX-gapWidth/2, yPL-30);
+      
+      const numWidth = ctx.measureText(gapNum).width;
+      ctx.font="bold 20px system-ui";
+      ctx.strokeText(gapNum, midX-numWidth/2, yPL+8);
+      ctx.fillText(gapNum, midX-numWidth/2, yPL+8);
 
       const gap = (Qs-Qd).toFixed(1);
       infoDesc = `Surplus / 过剩: Qᵈ = ${Qd.toFixed(1)}, Qˢ = ${Qs.toFixed(1)}. Gap / 过量 = ${gap}`;
