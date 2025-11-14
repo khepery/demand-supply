@@ -169,8 +169,8 @@
 <div class="app">
   <h1>📈 Demand & Supply Drag Playground</h1>
   <div class="hint">
-    Drag near 💙 demand or 💚 supply to shift them or change their slope. Drag the blue price line P* up or down.<br>
-    Watch how Qᵈ and Qˢ slide along their curves and try to land exactly on equilibrium.
+    📌 <strong>Drag curves up/down</strong> to shift demand/supply. <strong>Hold Shift + drag</strong> to change slope/elasticity.<br>
+    💡 Drag the blue price line P* up or down. Click "Show Equilibrium" to jump to the perfect balance point.
   </div>
 
   <div class="top-row">
@@ -231,7 +231,7 @@
       <div class="group-label">📏 Price level</div>
       <div class="control-row">
         <span><span>Price line P*</span><span id="pVal"></span></span>
-        <input id="priceLine" type="range" min="5" max="95" step="1" value="50">
+        <input id="priceLine" type="range" min="5" max="95" step="0.1" value="50">
       </div>
       <div class="mini">
         Move P* with this slider or drag the blue line on the graph.<br>
@@ -454,7 +454,7 @@
     bDVal.textContent = currBD.toFixed(2);
     aSVal.textContent = currAS.toFixed(0);
     bSVal.textContent = currBS.toFixed(2);
-    pVal.textContent  = Pline.toFixed(0);
+    pVal.textContent  = Pline.toFixed(1); // Show 1 decimal place for precision
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
     drawAxes();
@@ -482,7 +482,7 @@
 
         ctx.setLineDash([4,4]);
         ctx.strokeStyle="#facc15";
-        ctx.lineWidth=1.4;
+        ctx.lineWidth=1.8;
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(x, canvas.height - PAD_BOTTOM);
@@ -491,13 +491,18 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        drawDot(x,y,"#facc15",7);
+        drawDot(x,y,"#facc15",8);
+        
+        // Add clear label for equilibrium point
         ctx.fillStyle="#facc15";
-        ctx.font="13px system-ui";
-        ctx.fillText("E",x+8,y-6);
+        ctx.font="bold 14px system-ui";
+        ctx.strokeStyle="rgba(2,6,23,0.95)";
+        ctx.lineWidth=3;
+        ctx.strokeText("E (Equilibrium)",x+12,y-8);
+        ctx.fillText("E (Equilibrium)",x+12,y-8);
 
         ctx.fillStyle="#facc15";
-        ctx.font="12px system-ui";
+        ctx.font="bold 12px system-ui";
         ctx.fillText("Qᵉ", x-12, canvas.height-PAD_BOTTOM+20);
         ctx.fillText("Pᵉ", PAD_LEFT-26, y+4);
 
@@ -545,9 +550,22 @@
 
     drawDot(xQd,yPL,"#60a5fa",6);
     drawDot(xQs,yPL,"#22c55e",6);
+    
+    // Add labels next to the dots on the price line
+    ctx.font="bold 12px system-ui";
+    ctx.fillStyle="#60a5fa";
+    ctx.strokeStyle="rgba(2,6,23,0.9)";
+    ctx.lineWidth=2.5;
+    ctx.strokeText("Qᵈ", xQd+10, yPL-8);
+    ctx.fillText("Qᵈ", xQd+10, yPL-8);
+    
+    ctx.fillStyle="#22c55e";
+    ctx.strokeText("Qˢ", xQs+10, yPL-8);
+    ctx.fillText("Qˢ", xQs+10, yPL-8);
 
     ctx.setLineDash([4,4]);
     ctx.strokeStyle="#60a5fa";
+    ctx.lineWidth=1.4;
     ctx.beginPath();
     ctx.moveTo(xQd, yPL);
     ctx.lineTo(xQd, canvas.height - PAD_BOTTOM);
@@ -578,6 +596,16 @@
       ctx.lineTo(xQs, yD);
       ctx.closePath();
       ctx.fill();
+      
+      // Add label on the shortage area
+      const labelX = (xQs + xQd) / 2;
+      const labelY = yPL - 15;
+      ctx.fillStyle="#f97373";
+      ctx.font="bold 13px system-ui";
+      ctx.strokeStyle="rgba(2,6,23,0.9)";
+      ctx.lineWidth=3;
+      ctx.strokeText("SHORTAGE", labelX-35, labelY);
+      ctx.fillText("SHORTAGE", labelX-35, labelY);
 
       const gap = (Qd-Qs).toFixed(1);
       infoDesc = `Shortage at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
@@ -593,6 +621,16 @@
       ctx.lineTo(xQd, yS);
       ctx.closePath();
       ctx.fill();
+      
+      // Add label on the surplus area
+      const labelX = (xQd + xQs) / 2;
+      const labelY = yPL + 25;
+      ctx.fillStyle="#4ade80";
+      ctx.font="bold 13px system-ui";
+      ctx.strokeStyle="rgba(2,6,23,0.9)";
+      ctx.lineWidth=3;
+      ctx.strokeText("SURPLUS", labelX-30, labelY);
+      ctx.fillText("SURPLUS", labelX-30, labelY);
 
       const gap = (Qs-Qd).toFixed(1);
       infoDesc = `Surplus at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
@@ -713,7 +751,7 @@
     const yS = pToY(PsVal);
     const distD = Math.hypot(x-xCurve, y-yD);
     const distS = Math.hypot(x-xCurve, y-yS);
-    const curveThreshold = 16;
+    const curveThreshold = 20; // Increased threshold for easier grabbing
 
     dragTarget = null;
 
@@ -732,7 +770,8 @@
         bDStart: currBD,
         qStart: q,
         xStart: x,
-        yStart: y
+        yStart: y,
+        shiftKey: ev.shiftKey
       };
       canvas.setPointerCapture(ev.pointerId);
     } else if(distS < curveThreshold){
@@ -743,7 +782,8 @@
         bSStart: currBS,
         qStart: q,
         xStart: x,
-        yStart: y
+        yStart: y,
+        shiftKey: ev.shiftKey
       };
       canvas.setPointerCapture(ev.pointerId);
     }
@@ -760,59 +800,55 @@
       let newP = clamp(pNew, Number(priceLine.min), Number(priceLine.max));
       priceLine.value = newP;
     } else if(dragTarget === "demand"){
-      const deltaY = y - dragStart.yStart;
-      const deltaX = x - dragStart.xStart;
-      
-      // If mostly vertical movement, change intercept (shift curve)
-      if(Math.abs(deltaY) > Math.abs(deltaX) * 1.5){
-        const deltaP = pNew - dragStart.Pstart;
-        let newAD = dragStart.aDStart + deltaP;
-        newAD = clamp(newAD, Number(aD.min), Number(aD.max));
-        aD.value = newAD;
-      } else if(Math.abs(deltaX) > 5){
-        // If mostly horizontal movement, change slope
-        const w = canvas.width - PAD_LEFT - PAD_RIGHT;
-        const qNew = clamp((x - PAD_LEFT)/w * maxQ, 0, maxQ);
-        const deltaQ = qNew - dragStart.qStart;
-        
-        if(Math.abs(deltaQ) > 2){
-          // Calculate new slope to make curve pass through current point
-          // For demand: P = aD - bD*Q, so bD = (aD - P) / Q
-          const qAtPointer = dragStart.qStart + deltaQ * 0.3; // dampen the effect
+      // Check if Shift key is held for slope change
+      if(ev.shiftKey || dragStart.shiftKey){
+        // Shift key: change slope (elasticity)
+        const deltaX = x - dragStart.xStart;
+        if(Math.abs(deltaX) > 3){
+          const w = canvas.width - PAD_LEFT - PAD_RIGHT;
+          const qNew = clamp((x - PAD_LEFT)/w * maxQ, 0, maxQ);
+          const deltaQ = qNew - dragStart.qStart;
+          
+          // Calculate new slope based on horizontal drag
+          const qAtPointer = dragStart.qStart + deltaQ * 0.5; // Less dampening for better control
           if(qAtPointer > 5){
             let newBD = (dragStart.aDStart - dragStart.Pstart) / qAtPointer;
             newBD = clamp(newBD * 40, Number(bD.min), Number(bD.max));
             bD.value = newBD;
           }
         }
+      } else {
+        // No Shift key: vertical drag shifts curve (changes intercept)
+        const deltaP = pNew - dragStart.Pstart;
+        let newAD = dragStart.aDStart + deltaP;
+        newAD = clamp(newAD, Number(aD.min), Number(aD.max));
+        aD.value = newAD;
       }
       currentMarketLabel = "Custom market";
     } else if(dragTarget === "supply"){
-      const deltaY = y - dragStart.yStart;
-      const deltaX = x - dragStart.xStart;
-      
-      // If mostly vertical movement, change intercept (shift curve)
-      if(Math.abs(deltaY) > Math.abs(deltaX) * 1.5){
-        const deltaP = pNew - dragStart.Pstart;
-        let newAS = dragStart.aSStart + deltaP;
-        newAS = clamp(newAS, Number(aS.min), Number(aS.max));
-        aS.value = newAS;
-      } else if(Math.abs(deltaX) > 5){
-        // If mostly horizontal movement, change slope
-        const w = canvas.width - PAD_LEFT - PAD_RIGHT;
-        const qNew = clamp((x - PAD_LEFT)/w * maxQ, 0, maxQ);
-        const deltaQ = qNew - dragStart.qStart;
-        
-        if(Math.abs(deltaQ) > 2){
-          // Calculate new slope to make curve pass through current point
-          // For supply: P = aS + bS*Q, so bS = (P - aS) / Q
-          const qAtPointer = dragStart.qStart + deltaQ * 0.3; // dampen the effect
+      // Check if Shift key is held for slope change
+      if(ev.shiftKey || dragStart.shiftKey){
+        // Shift key: change slope (elasticity)
+        const deltaX = x - dragStart.xStart;
+        if(Math.abs(deltaX) > 3){
+          const w = canvas.width - PAD_LEFT - PAD_RIGHT;
+          const qNew = clamp((x - PAD_LEFT)/w * maxQ, 0, maxQ);
+          const deltaQ = qNew - dragStart.qStart;
+          
+          // Calculate new slope based on horizontal drag
+          const qAtPointer = dragStart.qStart + deltaQ * 0.5; // Less dampening for better control
           if(qAtPointer > 5){
             let newBS = (dragStart.Pstart - dragStart.aSStart) / qAtPointer;
             newBS = clamp(newBS * 40, Number(bS.min), Number(bS.max));
             bS.value = newBS;
           }
         }
+      } else {
+        // No Shift key: vertical drag shifts curve (changes intercept)
+        const deltaP = pNew - dragStart.Pstart;
+        let newAS = dragStart.aSStart + deltaP;
+        newAS = clamp(newAS, Number(aS.min), Number(aS.max));
+        aS.value = newAS;
       }
       currentMarketLabel = "Custom market";
     }
