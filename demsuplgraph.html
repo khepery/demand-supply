@@ -130,6 +130,34 @@
   .dot-price{background:var(--accent3);}
   .dot-short{background:var(--accentShort);}
   .dot-surp{background:var(--accentSurp);}
+  .elasticity-box{
+    margin-top:10px;
+    font-size:16px;
+    line-height:1.5;
+  }
+  .elasticity-bar{
+    margin-top:6px;
+    height:14px;
+    border-radius:999px;
+    overflow:hidden;
+    background:#020617;
+    box-shadow:0 0 0 1px rgba(148,163,184,0.4);
+  }
+  .elasticity-fill-q{
+    height:100%;
+    background:var(--accent2);
+    float:left;
+  }
+  .elasticity-fill-p{
+    height:100%;
+    background:var(--accent3);
+    float:left;
+  }
+  .elasticity-tag{
+    margin-top:4px;
+    font-size:15px;
+    color:var(--text-soft);
+  }
 
   @media(max-width:820px){
     #graph-wrapper{order:1;}
@@ -141,7 +169,7 @@
 <div class="app">
   <h1>📈 Demand & Supply Drag Playground</h1>
   <div class="hint">
-    Drag near 💙 demand or 💚 supply to shift them. Drag the blue price line P* up or down.<br>
+    Drag near 💙 demand or 💚 supply to shift them or change their slope. Drag the blue price line P* up or down.<br>
     Watch how Qᵈ and Qˢ slide along their curves and try to land exactly on equilibrium.
   </div>
 
@@ -211,6 +239,10 @@
       </div>
 
       <div class="stats" id="statsBox"></div>
+      
+      <div id="elasticityBox" class="elasticity-box"></div>
+      
+      <button id="showEqBtn" style="width:100%;margin-top:10px;padding:8px;border-radius:8px;background:var(--accent4);color:#020617;border:none;font-weight:600;cursor:pointer;font-size:13px;">Show Equilibrium</button>
 
       <div class="legend">
         <span><span class="dot dot-demand"></span>Demand (D)</span>
@@ -536,31 +568,31 @@
     ctx.fillText("Qˢ", xQs-12, canvas.height-PAD_BOTTOM+20);
 
     if(Qd > Qs){
-      const startX = xQs;
-      const width = xQd - xQs;
-      const midX = startX + width/2;
-      ctx.fillStyle="rgba(249,115,115,0.35)";
-      ctx.fillRect(startX, yPL-12, width, 24);
-      ctx.strokeStyle="rgba(248,113,113,0.7)";
-      ctx.strokeRect(startX, yPL-12, width, 24);
-      ctx.fillStyle="#fecaca";
-      ctx.font="12px system-ui";
-      ctx.fillText("Shortage", midX-28, yPL-18);
+      // Draw triangular shortage area
+      ctx.fillStyle="rgba(249,115,115,0.2)";
+      ctx.beginPath();
+      ctx.moveTo(xQs, yPL);
+      ctx.lineTo(xQd, yPL);
+      const yD = pToY(Pd(Qs));
+      const yS = pToY(Ps(Qs));
+      ctx.lineTo(xQs, yD);
+      ctx.closePath();
+      ctx.fill();
 
       const gap = (Qd-Qs).toFixed(1);
       infoDesc = `Shortage at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
       mode="shortage";
     } else if(Qs > Qd){
-      const startX = xQd;
-      const width = xQs - xQd;
-      const midX = startX + width/2;
-      ctx.fillStyle="rgba(74,222,128,0.25)";
-      ctx.fillRect(startX, yPL-12, width, 24);
-      ctx.strokeStyle="rgba(74,222,128,0.7)";
-      ctx.strokeRect(startX, yPL-12, width, 24);
-      ctx.fillStyle="#bbf7d0";
-      ctx.font="12px system-ui";
-      ctx.fillText("Surplus", midX-26, yPL-18);
+      // Draw triangular surplus area
+      ctx.fillStyle="rgba(74,222,128,0.2)";
+      ctx.beginPath();
+      ctx.moveTo(xQd, yPL);
+      ctx.lineTo(xQs, yPL);
+      const yD = pToY(Pd(Qd));
+      const yS = pToY(Ps(Qd));
+      ctx.lineTo(xQd, yS);
+      ctx.closePath();
+      ctx.fill();
 
       const gap = (Qs-Qd).toFixed(1);
       infoDesc = `Surplus at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
@@ -588,6 +620,76 @@
       (hint ? `<div class="stats-line">${hint}</div>` : "");
 
     setEmoji(mode);
+    
+    // Calculate Price Elasticity of Demand (PED)
+    const elasticityBox = document.getElementById("elasticityBox");
+    const P0 = Pline;
+    const dP = Math.max(1, P0 * 0.05); // 5% price change or at least 1
+    const P1 = clamp(P0 + dP, 5, 95);
+    const Q0 = Qd;
+    let Q1 = null;
+    if(currBD > 0.0001) Q1 = (currAD - P1) / currBD;
+    
+    if(Q1 !== null && !isNaN(Q1) && Q0 > 0 && Q1 > 0){
+      const Pavg = (P0 + P1) / 2;
+      const Qavg = (Q0 + Q1) / 2;
+      const pctP = ((P1 - P0) / Pavg) * 100;
+      const pctQ = ((Q1 - Q0) / Qavg) * 100;
+      const ped = Math.abs(pctQ / pctP);
+      
+      // Determine elasticity category and color
+      let category = "";
+      let categoryColor = "";
+      let categoryEn = "";
+      let categoryCn = "";
+      if(ped > 1.1){
+        category = "elastic";
+        categoryColor = "#4ade80";
+        categoryEn = "Elastic >1 (stretchy)";
+        categoryCn = "富有弹性 >1 (有弹性)";
+      } else if(ped >= 0.9 && ped <= 1.1){
+        category = "unit";
+        categoryColor = "#facc15";
+        categoryEn = "Unit elastic ≈1";
+        categoryCn = "单位弹性 ≈1";
+      } else {
+        category = "inelastic";
+        categoryColor = "#f97373";
+        categoryEn = "Inelastic <1 (stiff)";
+        categoryCn = "缺乏弹性 <1 (刚性)";
+      }
+      
+      // Calculate bar widths (normalize to max 100%)
+      const maxPct = Math.max(Math.abs(pctP), Math.abs(pctQ));
+      const pctPBar = (Math.abs(pctP) / maxPct) * 100;
+      const pctQBar = (Math.abs(pctQ) / maxPct) * 100;
+      
+      elasticityBox.innerHTML = `
+        <div style="font-weight:600;margin-bottom:4px;">📊 Price Elasticity of Demand / 需求价格弹性</div>
+        <div style="font-size:14px;color:var(--text-soft);">
+          <strong>%ΔP:</strong> ${pctP.toFixed(1)}%
+          <div class="elasticity-bar" style="margin-top:3px;margin-bottom:8px;">
+            <div class="elasticity-fill-p" style="width:${pctPBar}%;"></div>
+          </div>
+          <strong>%ΔQ:</strong> ${pctQ.toFixed(1)}%
+          <div class="elasticity-bar" style="margin-top:3px;margin-bottom:8px;">
+            <div class="elasticity-fill-q" style="width:${pctQBar}%;"></div>
+          </div>
+          <strong>|PED| = |%ΔQ / %ΔP|:</strong> ${ped.toFixed(2)}
+        </div>
+        <div class="elasticity-tag" style="color:${categoryColor};font-weight:600;">
+          ${categoryEn}<br>${categoryCn}
+        </div>
+      `;
+    } else {
+      elasticityBox.innerHTML = `
+        <div style="font-weight:600;margin-bottom:4px;">📊 Price Elasticity of Demand / 需求价格弹性</div>
+        <div style="font-size:14px;color:var(--text-soft);">
+          Adjust the price or demand curve to calculate PED.<br>
+          调整价格或需求曲线以计算PED。
+        </div>
+      `;
+    }
   }
 
   function clamp(v,min,max){return v<min?min:v>max?max:v;}
@@ -624,11 +726,25 @@
 
     if(distD < curveThreshold && distD <= distS){
       dragTarget = "demand";
-      dragStart = { Pstart: PdVal, aDStart: currAD };
+      dragStart = { 
+        Pstart: PdVal, 
+        aDStart: currAD, 
+        bDStart: currBD,
+        qStart: q,
+        xStart: x,
+        yStart: y
+      };
       canvas.setPointerCapture(ev.pointerId);
     } else if(distS < curveThreshold){
       dragTarget = "supply";
-      dragStart = { Pstart: PsVal, aSStart: currAS };
+      dragStart = { 
+        Pstart: PsVal, 
+        aSStart: currAS,
+        bSStart: currBS,
+        qStart: q,
+        xStart: x,
+        yStart: y
+      };
       canvas.setPointerCapture(ev.pointerId);
     }
   }
@@ -636,6 +752,7 @@
   function handlePointerMove(ev){
     if(!dragTarget || !dragStart) return;
     const rect = canvas.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
     const y = ev.clientY - rect.top;
     const pNew = yToP(y);
 
@@ -643,16 +760,60 @@
       let newP = clamp(pNew, Number(priceLine.min), Number(priceLine.max));
       priceLine.value = newP;
     } else if(dragTarget === "demand"){
-      const deltaP = pNew - dragStart.Pstart;
-      let newAD = dragStart.aDStart + deltaP;
-      newAD = clamp(newAD, Number(aD.min), Number(aD.max));
-      aD.value = newAD;
+      const deltaY = y - dragStart.yStart;
+      const deltaX = x - dragStart.xStart;
+      
+      // If mostly vertical movement, change intercept (shift curve)
+      if(Math.abs(deltaY) > Math.abs(deltaX) * 1.5){
+        const deltaP = pNew - dragStart.Pstart;
+        let newAD = dragStart.aDStart + deltaP;
+        newAD = clamp(newAD, Number(aD.min), Number(aD.max));
+        aD.value = newAD;
+      } else if(Math.abs(deltaX) > 5){
+        // If mostly horizontal movement, change slope
+        const w = canvas.width - PAD_LEFT - PAD_RIGHT;
+        const qNew = clamp((x - PAD_LEFT)/w * maxQ, 0, maxQ);
+        const deltaQ = qNew - dragStart.qStart;
+        
+        if(Math.abs(deltaQ) > 2){
+          // Calculate new slope to make curve pass through current point
+          // For demand: P = aD - bD*Q, so bD = (aD - P) / Q
+          const qAtPointer = dragStart.qStart + deltaQ * 0.3; // dampen the effect
+          if(qAtPointer > 5){
+            let newBD = (dragStart.aDStart - dragStart.Pstart) / qAtPointer;
+            newBD = clamp(newBD * 40, Number(bD.min), Number(bD.max));
+            bD.value = newBD;
+          }
+        }
+      }
       currentMarketLabel = "Custom market";
     } else if(dragTarget === "supply"){
-      const deltaP = pNew - dragStart.Pstart;
-      let newAS = dragStart.aSStart + deltaP;
-      newAS = clamp(newAS, Number(aS.min), Number(aS.max));
-      aS.value = newAS;
+      const deltaY = y - dragStart.yStart;
+      const deltaX = x - dragStart.xStart;
+      
+      // If mostly vertical movement, change intercept (shift curve)
+      if(Math.abs(deltaY) > Math.abs(deltaX) * 1.5){
+        const deltaP = pNew - dragStart.Pstart;
+        let newAS = dragStart.aSStart + deltaP;
+        newAS = clamp(newAS, Number(aS.min), Number(aS.max));
+        aS.value = newAS;
+      } else if(Math.abs(deltaX) > 5){
+        // If mostly horizontal movement, change slope
+        const w = canvas.width - PAD_LEFT - PAD_RIGHT;
+        const qNew = clamp((x - PAD_LEFT)/w * maxQ, 0, maxQ);
+        const deltaQ = qNew - dragStart.qStart;
+        
+        if(Math.abs(deltaQ) > 2){
+          // Calculate new slope to make curve pass through current point
+          // For supply: P = aS + bS*Q, so bS = (P - aS) / Q
+          const qAtPointer = dragStart.qStart + deltaQ * 0.3; // dampen the effect
+          if(qAtPointer > 5){
+            let newBS = (dragStart.Pstart - dragStart.aSStart) / qAtPointer;
+            newBS = clamp(newBS * 40, Number(bS.min), Number(bS.max));
+            bS.value = newBS;
+          }
+        }
+      }
       currentMarketLabel = "Custom market";
     }
     updateValues();
@@ -690,6 +851,29 @@
 
   marketSelect.addEventListener("change",e=>{
     applyMarket(e.target.value);
+  });
+
+  document.getElementById("showEqBtn").addEventListener("click", () => {
+    // Calculate equilibrium
+    const currADVal = Number(aD.value);
+    const currBDVal = Number(bD.value) / 40;
+    const currASVal = Number(aS.value);
+    const currBSVal = Number(bS.value) / 40;
+    
+    const denom = currBDVal + currBSVal;
+    if(denom > 0.0001){
+      const Qe = (currADVal - currASVal) / denom;
+      const Pe = currADVal - currBDVal * Qe;
+      
+      if(Qe >= 0 && Qe <= maxQ && Pe >= 5 && Pe <= 95){
+        priceLine.value = Pe;
+        updateValues();
+      } else {
+        alert("Equilibrium is outside the visible range. Try adjusting the curves.");
+      }
+    } else {
+      alert("Cannot calculate equilibrium with current curve parameters.");
+    }
   });
 
   window.addEventListener("resize",resizeCanvas);
