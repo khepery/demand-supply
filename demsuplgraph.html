@@ -606,6 +606,12 @@
       ctx.lineWidth=3;
       ctx.strokeText("SHORTAGE", labelX-35, labelY);
       ctx.fillText("SHORTAGE", labelX-35, labelY);
+      
+      // Add explanation
+      ctx.font="10px system-ui";
+      ctx.fillStyle="#fecaca";
+      ctx.strokeText("(Qᵈ > Qˢ)", labelX-20, labelY + 14);
+      ctx.fillText("(Qᵈ > Qˢ)", labelX-20, labelY + 14);
 
       const gap = (Qd-Qs).toFixed(1);
       infoDesc = `Shortage at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
@@ -631,6 +637,12 @@
       ctx.lineWidth=3;
       ctx.strokeText("SURPLUS", labelX-30, labelY);
       ctx.fillText("SURPLUS", labelX-30, labelY);
+      
+      // Add explanation
+      ctx.font="10px system-ui";
+      ctx.fillStyle="#bbf7d0";
+      ctx.strokeText("(Qˢ > Qᵈ)", labelX-20, labelY + 14);
+      ctx.fillText("(Qˢ > Qᵈ)", labelX-20, labelY + 14);
 
       const gap = (Qs-Qd).toFixed(1);
       infoDesc = `Surplus at this price. Qᵈ ≈ ${Qd.toFixed(1)}, Qˢ ≈ ${Qs.toFixed(1)}. Gap ≈ ${gap}.`;
@@ -658,6 +670,61 @@
       (hint ? `<div class="stats-line">${hint}</div>` : "");
 
     setEmoji(mode);
+    
+    // Draw product examples box on canvas based on elasticity
+    const demandSlope = currBD;
+    const supplySlope = currBS;
+    
+    // Determine product examples based on demand elasticity
+    let productExamples = "";
+    let bgColor = "";
+    if(demandSlope < 0.6) {
+      // Very inelastic demand (steep/vertical curve)
+      productExamples = "💊 Medicine\n💡 Electricity\n⛽ Gasoline";
+      bgColor = "rgba(249,115,115,0.85)";
+    } else if(demandSlope < 1.2) {
+      // Moderately inelastic
+      productExamples = "🍞 Bread\n💧 Water\n🍚 Rice";
+      bgColor = "rgba(251,191,36,0.85)";
+    } else if(demandSlope < 2.0) {
+      // Unit elastic to moderately elastic
+      productExamples = "👕 Clothing\n🍕 Restaurant meals\n📱 Smartphones";
+      bgColor = "rgba(74,222,128,0.85)";
+    } else {
+      // Very elastic demand (flat/horizontal curve)
+      productExamples = "💎 Luxury goods\n🎨 Art\n🎮 Game skins";
+      bgColor = "rgba(56,189,248,0.85)";
+    }
+    
+    // Draw box in top-right corner of canvas
+    const boxWidth = 180;
+    const boxHeight = 95;
+    const boxX = canvas.width - PAD_RIGHT - boxWidth - 10;
+    const boxY = PAD_TOP + 10;
+    
+    // Draw background
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+    ctx.strokeStyle = "rgba(148,163,184,0.6)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+    
+    // Draw title
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 12px system-ui";
+    ctx.fillText("📊 Similar Products:", boxX + 8, boxY + 18);
+    
+    // Draw examples
+    ctx.font = "11px system-ui";
+    const lines = productExamples.split('\n');
+    lines.forEach((line, i) => {
+      ctx.fillText(line, boxX + 8, boxY + 38 + i * 16);
+    });
+    
+    // Add slope info
+    ctx.font = "10px system-ui";
+    ctx.fillStyle = "rgba(255,255,255,0.8)";
+    ctx.fillText(`Demand slope: ${demandSlope.toFixed(2)}`, boxX + 8, boxY + boxHeight - 8);
     
     // Calculate Price Elasticity of Demand (PED)
     const elasticityBox = document.getElementById("elasticityBox");
